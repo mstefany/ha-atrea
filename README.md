@@ -41,7 +41,7 @@ Home Assistant 2026.11 or newer is required.
 | --- | --- |
 | Climate | Target and room temperature. HVAC mode is the season (heat = heating season, cool = non-heating season, heat/cool = automatic) or off. Preset is the operating mode. Fan mode is the power level (R_5 units). |
 | Select: operating mode, power level, season | The same settings as single entities, for automations |
-| Switch: weekly program | Hands control to the weekly program of the unit, or takes it back |
+| Switch: weekly program | Hands control to the weekly program of the unit, or takes it back. Disabled by default: it is not tested on a real unit yet |
 | Switch: heat storage electric heater 1 and 2 | For example to use photovoltaic surplus |
 | Number: heat storage targets, season changeover temperature | |
 | Sensors | Air temperatures, air flows, heat storage temperatures, current phase, season, forced state |

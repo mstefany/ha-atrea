@@ -7,7 +7,7 @@ from contextlib import asynccontextmanager
 import json
 from pathlib import Path
 from typing import Any
-from unittest.mock import patch
+from unittest.mock import PropertyMock, patch
 
 from modbus_connection.mock import MockModbusConnection, MockModbusUnit, WriteEvent
 import pytest
@@ -27,6 +27,16 @@ Writes = list[tuple[str, int, list[int] | list[bool]]]
 @pytest.fixture(autouse=True)
 def auto_enable_custom_integrations(enable_custom_integrations: None) -> None:
     """Let Home Assistant load the integration under test."""
+
+
+@pytest.fixture(autouse=True)
+def all_entities_enabled() -> Generator[None]:
+    """Test the entities that are disabled by default as well."""
+    with patch(
+        "homeassistant.helpers.entity.Entity.entity_registry_enabled_default",
+        new_callable=PropertyMock(return_value=True),
+    ):
+        yield
 
 
 @pytest.fixture(autouse=True)

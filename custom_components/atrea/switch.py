@@ -36,6 +36,9 @@ SWITCHES: tuple[AtreaSwitchEntityDescription, ...] = (
         key="weekly_program",
         translation_key="weekly_program",
         component="control",
+        # Not tested on a real unit yet: switching it on applies the schedule
+        # stored in the unit, which Modbus cannot show.
+        entity_registry_enabled_default=False,
         value_fn=lambda d: d.control.follows_schedule,
         write_fn=lambda d, value: d.control.async_follow_schedule(value),
     ),
