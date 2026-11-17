@@ -62,6 +62,7 @@ __all__ = [
     "HeatStorage",
     "Identity",
     "IndoorTemperatureSource",
+    "ModeLimits",
     "OperatingMode",
     "Outputs",
     "PrimaryHeating",

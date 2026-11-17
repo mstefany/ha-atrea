@@ -76,6 +76,23 @@ async def test_unit_without_heat_storage_has_no_storage_entities(
     assert hass.states.get(CLIMATE) is not None
 
 
+async def test_r5_unit_without_two_zones_has_a_power_number(
+    hass: HomeAssistant, unit: MockModbusUnit, entry: MockConfigEntry, writes: Writes
+) -> None:
+    unit.coil[10509] = False
+    unit.holding[10714] = 2
+    unit.holding[10715] = 2
+    assert await hass.config_entries.async_setup(entry.entry_id)
+    await hass.async_block_till_done()
+    assert hass.states.get(f"select.{P}_power_level") is None
+    climate = hass.states.get(CLIMATE)
+    assert climate is not None
+    assert "fan_modes" not in climate.attributes
+    assert state(hass, f"number.{P}_power_level") == "2"
+    await call(hass, "number", "set_value", f"number.{P}_power_level", value=3)
+    assert ("holding", 10708, [3]) in writes
+
+
 async def test_setup_retries_when_the_unit_is_silent(
     hass: HomeAssistant, unit: MockModbusUnit, entry: MockConfigEntry
 ) -> None:

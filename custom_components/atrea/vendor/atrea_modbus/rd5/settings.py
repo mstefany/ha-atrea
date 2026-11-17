@@ -54,6 +54,10 @@ class Configuration(Component):
     Between the tests the unit stands still; a test runs the fans for five
     minutes to measure the real air temperatures.
     """
+    ground_heat_exchanger = integer(10519, signed=False)
+    """Ground heat exchanger type (3.10.1); 0 means none."""
+    heat_exchanger_type = integer(11801, signed=False)
+    """Heat exchanger type (3.3.1); 0 means a plate heat exchanger."""
     circulation_damper = boolean(11700)
     """The unit has a circulation damper."""
 

@@ -240,6 +240,7 @@ TREE: dict[str, Any] = {
                 "Season changeover temperature", "Teplota přepnutí sezóny"
             ),
             "power": name("Power", "Výkon"),
+            "power_step": name("Power level", "Stupeň výkonu"),
         },
         "button": {
             "reset_filter_interval": name(

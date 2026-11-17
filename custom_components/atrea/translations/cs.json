@@ -279,6 +279,9 @@
       },
       "power": {
         "name": "Výkon"
+      },
+      "power_step": {
+        "name": "Stupeň výkonu"
       }
     },
     "button": {

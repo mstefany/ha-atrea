@@ -95,6 +95,20 @@ NUMBERS: tuple[AtreaNumberEntityDescription, ...] = (
             )
         ),
     ),
+    # An R_5 unit without two-zone operation takes levels 1 to 9 (Min/Min to
+    # Max/Max) in the automatic mode and 1 to 3 (Min to Max) in the others.
+    # Untested: the test unit has two-zone operation.
+    AtreaNumberEntityDescription(
+        key="power_step",
+        translation_key="power_step",
+        component="control",
+        native_min_value=1,
+        native_max_value=9,
+        native_step=1,
+        value_fn=lambda d: d.control.requested_power,
+        write_fn=lambda d, value: d.async_set_power(int(value)),
+        exists_fn=lambda d: d.is_r5 and not d.has_power_levels,
+    ),
 )
 
 

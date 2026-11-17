@@ -12,7 +12,13 @@ from .control import Control
 from .enums import FanRegulation, OperatingMode, R5Power, Season
 from .identity import Firmware, Identity
 from .outputs import DigitalInputs, Outputs
-from .sensors import RG_BOARD_INPUTS, TZ_BOARD_INPUTS, BoardInputs, Sensors
+from .sensors import (
+    RG_BOARD_INPUTS,
+    TZ_BOARD_INPUTS,
+    BoardInputs,
+    ModeLimits,
+    Sensors,
+)
 from .settings import (
     RESET_ALARMS_COIL,
     RESET_FILTER_INTERVAL_COIL,
@@ -36,7 +42,7 @@ READINGS = (
     "rg_inputs",
     "tz_inputs",
 )
-SETTINGS = ("settings", "heat_storage")
+SETTINGS = ("settings", "heat_storage", "mode_limits")
 # The identity is left out of a raw dump: it holds the production number.
 ALL = ("firmware", "configuration", "r5_flows", *READINGS, *SETTINGS)
 
@@ -52,11 +58,10 @@ _CIRCULATION = (
 )
 _COMBINED = tuple(level for level in R5Power if level >= R5Power.MIN_MIN)
 
-# The power levels an R_5 unit takes in each mode. Measured on a DUPLEX RB5:
+# The power levels an R_5 unit with two-zone operation takes in each mode. The
+# web interface of the unit offers exactly these. Measured on a DUPLEX RB5:
 # given a level of another family, the unit does not refuse it but runs the
-# matching level of the family below (see ``r5_power_for_mode``). Automatic and
-# night precooling did not run during the measurement, so their rows are an
-# assumption.
+# matching level of the family below (see ``r5_power_for_mode``).
 R5_POWER_LEVELS: dict[OperatingMode, tuple[R5Power, ...]] = {
     OperatingMode.OFF: (),
     OperatingMode.AUTOMATIC: _COMBINED,
@@ -113,6 +118,7 @@ class AtreaRD5(Device):
         self.identity: Identity | None = None
         self.firmware: Firmware | None = None
         self.r5_flows: R5Flows | None = None
+        self.mode_limits: ModeLimits | None = None
         self.rg_inputs: BoardInputs | None = None
         self.tz_inputs: BoardInputs | None = None
         self.heat_storage: HeatStorage | None = None
@@ -122,6 +128,7 @@ class AtreaRD5(Device):
         unit = self.modbus_unit
         self.identity = await read_optional(Identity(unit))
         self.firmware = await read_optional(Firmware(unit))
+        self.mode_limits = await read_optional(ModeLimits(unit))
         await self.configuration.async_update()
         await self.digital_inputs.async_update()
         if self.is_r5:
@@ -157,6 +164,17 @@ class AtreaRD5(Device):
         return self.configuration.fan_regulation is FanRegulation.R5_CONSTANT_FLOW
 
     @property
+    def has_power_levels(self) -> bool:
+        """Whether the power is one of the ``R5Power`` levels.
+
+        That holds for an R_5 unit set up for two-zone operation. The web
+        interface of the unit gives any other R_5 unit the values 1 to 9
+        (Min/Min to Max/Max) in the automatic mode and 1 to 3 (Min, Norm, Max)
+        in the other modes; that is untested.
+        """
+        return self.is_r5 and bool(self.configuration.circulation_with_ventilation)
+
+    @property
     def model(self) -> str:
         """The most this register map tells about the unit type."""
         return "DUPLEX R_5" if self.is_r5 else "DUPLEX"
@@ -178,25 +196,34 @@ class AtreaRD5(Device):
 
     @property
     def available_modes(self) -> tuple[OperatingMode, ...]:
-        """The operating modes this unit accepts now (table 3)."""
+        """The operating modes this unit accepts now.
+
+        These are the conditions of table 3 of the source document, less the
+        modes the unit itself says it does not take (``ModeLimits``).
+        """
         config = self.configuration
-        if config.vav_box_mode:
-            return (OperatingMode.OFF, OperatingMode.VENTILATION)
-        modes = [OperatingMode.OFF, OperatingMode.AUTOMATIC, OperatingMode.VENTILATION]
-        if config.circulation_with_ventilation:
-            modes.append(OperatingMode.CIRCULATION_WITH_VENTILATION)
-        if config.circulation_damper:
-            modes.append(OperatingMode.CIRCULATION)
-        if self.sensors.season is Season.NON_HEATING:
-            modes.append(OperatingMode.NIGHT_PRECOOLING)
-        modes += [OperatingMode.UNBALANCED, OperatingMode.OVERPRESSURE]
-        return tuple(modes)
+        modes = [OperatingMode.VENTILATION]
+        if not config.vav_box_mode:
+            modes.insert(0, OperatingMode.AUTOMATIC)
+            # The web interface of the unit asks for the damper for both
+            # circulation modes.
+            if config.circulation_damper:
+                if config.circulation_with_ventilation:
+                    modes.append(OperatingMode.CIRCULATION_WITH_VENTILATION)
+                modes.append(OperatingMode.CIRCULATION)
+            if self.sensors.season is Season.NON_HEATING:
+                modes.append(OperatingMode.NIGHT_PRECOOLING)
+            modes += [OperatingMode.UNBALANCED, OperatingMode.OVERPRESSURE]
+        mask = self.mode_limits.writable_modes if self.mode_limits else None
+        if mask is not None:
+            modes = [mode for mode in modes if mask >> int(mode) & 1]
+        return (OperatingMode.OFF, *modes)
 
     @property
     def r5_power(self) -> R5Power | None:
         """The power level requested now, on an R_5 unit."""
         power = self.control.requested_power
-        if not self.is_r5 or power is None:
+        if not self.has_power_levels or power is None:
             return None
         try:
             return R5Power(power)
@@ -219,8 +246,11 @@ class AtreaRD5(Device):
     def _check_power(self, power: int) -> None:
         """Refuse a power value this type of fan regulation does not take."""
         regulation = self.configuration.fan_regulation
-        if regulation is FanRegulation.R5_CONSTANT_FLOW:
+        if self.has_power_levels:
             valid = power in tuple(R5Power)
+        elif regulation is FanRegulation.R5_CONSTANT_FLOW:
+            automatic = self.control.requested_mode is OperatingMode.AUTOMATIC
+            valid = 1 <= power <= (9 if automatic else 3)
         elif regulation is FanRegulation.CONSTANT_PRESSURE:
             valid = power in (1, 2)
         elif regulation is FanRegulation.CONSTANT_FLOW:
@@ -238,7 +268,7 @@ class AtreaRD5(Device):
         power = int(power)
         self._check_power(power)
         mode = self.control.requested_mode
-        if self.is_r5 and mode is not None:
+        if self.has_power_levels and mode is not None:
             power = r5_power_for_mode(R5Power(power), mode) or power
         await self.control.async_set_power(power)
 

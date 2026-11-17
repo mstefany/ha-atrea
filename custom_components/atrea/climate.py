@@ -87,7 +87,7 @@ class AtreaClimate(AtreaEntity, ClimateEntity):
             | ClimateEntityFeature.TURN_ON
             | ClimateEntityFeature.TURN_OFF
         )
-        if self.device.is_r5:
+        if self.device.has_power_levels:
             features |= ClimateEntityFeature.FAN_MODE
         self._attr_supported_features = features
         # The mode to return to when the unit is switched on again.
@@ -153,7 +153,15 @@ class AtreaClimate(AtreaEntity, ClimateEntity):
             return HVACAction.OFF
         if outputs.sc_relay:
             return HVACAction.COOLING
-        if outputs.se or outputs.kk or (outputs.sa2 or 0) > 0:
+        # The outputs that light the heating sign of the unit's own web
+        # interface. SE and OC1 heat only on some installations.
+        config = self.device.configuration
+        if (
+            outputs.yv2
+            or (outputs.sa2 or 0) > 0
+            or (outputs.se and config.ground_heat_exchanger == 0)
+            or (outputs.oc1 and config.heat_exchanger_type == 0)
+        ):
             return HVACAction.HEATING
         if (outputs.m1 or 0) > 1 or (outputs.m2 or 0) > 1:
             return HVACAction.FAN
@@ -179,7 +187,7 @@ class AtreaClimate(AtreaEntity, ClimateEntity):
     @property
     def fan_modes(self) -> list[str] | None:
         """The power levels of the requested operating mode."""
-        if not self.device.is_r5 or (mode := self._mode) is None:
+        if not self.device.has_power_levels or (mode := self._mode) is None:
             return None
         return [option_slug(level) for level in R5_POWER_LEVELS[mode]]
 

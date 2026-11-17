@@ -80,3 +80,16 @@ class BoardInputs(Component):
 
 RG_BOARD_INPUTS = 10236
 TZ_BOARD_INPUTS = 10245
+
+
+class ModeLimits(Component):
+    """Which operating modes the unit lets a user request now.
+
+    The source document does not list this register; the web interface of the
+    unit takes its list of modes from it.
+    """
+
+    register_space = "input"
+
+    writable_modes = integer(12004, signed=False)
+    """Bit mask: bit N is set when the operating mode N can be requested."""

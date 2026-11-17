@@ -45,7 +45,7 @@ SELECTS: tuple[AtreaSelectEntityDescription, ...] = (
         options=enum_options(R5Power),
         value_fn=lambda device: device.r5_power,
         write_fn=lambda device, option: device.async_set_power(R5Power[option.upper()]),
-        exists_fn=lambda device: device.is_r5,
+        exists_fn=lambda device: device.has_power_levels,
     ),
     AtreaSelectEntityDescription(
         key="season_mode",
