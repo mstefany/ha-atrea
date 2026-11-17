@@ -1,0 +1,14 @@
+{
+  "domain": "atrea",
+  "name": "Atrea",
+  "codeowners": ["@mstefany"],
+  "config_flow": true,
+  "dependencies": ["modbus"],
+  "documentation": "https://github.com/mstefany/ha-atrea",
+  "integration_type": "device",
+  "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/mstefany/ha-atrea/issues",
+  "loggers": ["modbus_connection", "tmodbus"],
+  "requirements": [],
+  "version": "0.1.0"
+}

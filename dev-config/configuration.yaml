@@ -1,0 +1,16 @@
+# A throwaway Home Assistant for developing the integration.
+# It has no connection to any other Home Assistant instance.
+homeassistant:
+  name: Atrea dev
+
+frontend:
+config:
+history:
+logbook:
+diagnostics:
+
+logger:
+  default: warning
+  logs:
+    custom_components.atrea: debug
+    modbus_connection: info

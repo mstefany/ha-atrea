@@ -1,0 +1,291 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "description": "Enable Modbus TCP on the unit first: service parameter 3.15.1.",
+        "data": {
+          "host": "Host",
+          "port": "Port"
+        },
+        "data_description": {
+          "host": "The hostname or IP address of the unit.",
+          "port": "The Modbus TCP port of the unit."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect: {error}",
+      "not_rd5": "The device answers, but not like an Atrea unit with RD5 control."
+    },
+    "abort": {
+      "already_configured": "Device is already configured"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "description": "The unit can take the room and the outdoor temperature from Home Assistant. This needs the matching service setting on the unit (temperature source BMS).",
+        "data": {
+          "indoor_temperature_entity": "Room temperature sensor",
+          "outdoor_temperature_entity": "Outdoor temperature sensor"
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "write_failed": {
+      "message": "The unit did not accept the change: {error}"
+    }
+  },
+  "entity": {
+    "climate": {
+      "unit": {
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "off": "Off",
+              "automatic": "Automatic",
+              "ventilation": "Ventilation",
+              "circulation_with_ventilation": "Circulation with ventilation",
+              "circulation": "Circulation",
+              "night_precooling": "Night precooling",
+              "unbalanced": "Unbalanced ventilation",
+              "overpressure": "Overpressure ventilation"
+            }
+          },
+          "fan_mode": {
+            "state": {
+              "ventilation_min": "Ventilation Min",
+              "ventilation_norm": "Ventilation Norm",
+              "ventilation_max": "Ventilation Max",
+              "circulation_min": "Circulation Min",
+              "circulation_norm": "Circulation Norm",
+              "circulation_max": "Circulation Max",
+              "min_min": "Circulation Min / ventilation Min",
+              "min_norm": "Circulation Min / ventilation Norm",
+              "min_max": "Circulation Min / ventilation Max",
+              "norm_min": "Circulation Norm / ventilation Min",
+              "norm_norm": "Circulation Norm / ventilation Norm",
+              "norm_max": "Circulation Norm / ventilation Max",
+              "max_min": "Circulation Max / ventilation Min",
+              "max_norm": "Circulation Max / ventilation Norm",
+              "max_max": "Circulation Max / ventilation Max"
+            }
+          }
+        }
+      }
+    },
+    "select": {
+      "operating_mode": {
+        "name": "Operating mode",
+        "state": {
+          "off": "Off",
+          "automatic": "Automatic",
+          "ventilation": "Ventilation",
+          "circulation_with_ventilation": "Circulation with ventilation",
+          "circulation": "Circulation",
+          "night_precooling": "Night precooling",
+          "unbalanced": "Unbalanced ventilation",
+          "overpressure": "Overpressure ventilation"
+        }
+      },
+      "power_level": {
+        "name": "Power level",
+        "state": {
+          "ventilation_min": "Ventilation Min",
+          "ventilation_norm": "Ventilation Norm",
+          "ventilation_max": "Ventilation Max",
+          "circulation_min": "Circulation Min",
+          "circulation_norm": "Circulation Norm",
+          "circulation_max": "Circulation Max",
+          "min_min": "Circulation Min / ventilation Min",
+          "min_norm": "Circulation Min / ventilation Norm",
+          "min_max": "Circulation Min / ventilation Max",
+          "norm_min": "Circulation Norm / ventilation Min",
+          "norm_norm": "Circulation Norm / ventilation Norm",
+          "norm_max": "Circulation Norm / ventilation Max",
+          "max_min": "Circulation Max / ventilation Min",
+          "max_norm": "Circulation Max / ventilation Norm",
+          "max_max": "Circulation Max / ventilation Max"
+        }
+      },
+      "season_mode": {
+        "name": "Season",
+        "state": {
+          "heating": "Heating season",
+          "non_heating": "Non-heating season",
+          "t_oda": "Automatic by outdoor temperature",
+          "t_oda_plus": "Automatic by outdoor temperature and heat gain"
+        }
+      }
+    },
+    "sensor": {
+      "outdoor_air": {
+        "name": "Outdoor air temperature"
+      },
+      "supply_air": {
+        "name": "Supply air temperature"
+      },
+      "extract_air": {
+        "name": "Extract air temperature"
+      },
+      "exhaust_air": {
+        "name": "Exhaust air temperature"
+      },
+      "indoor_air": {
+        "name": "Room temperature"
+      },
+      "outdoor_air_average": {
+        "name": "Average outdoor air temperature"
+      },
+      "supply_flow": {
+        "name": "Supply air flow"
+      },
+      "extract_flow": {
+        "name": "Extract air flow"
+      },
+      "outdoor_flow": {
+        "name": "Outdoor air flow"
+      },
+      "supply_flow_requested": {
+        "name": "Requested supply air flow"
+      },
+      "extract_flow_requested": {
+        "name": "Requested extract air flow"
+      },
+      "outdoor_flow_requested": {
+        "name": "Requested outdoor air flow"
+      },
+      "current_phase": {
+        "name": "Current phase",
+        "state": {
+          "off": "Off",
+          "automatic": "Automatic",
+          "ventilation": "Ventilation",
+          "circulation_with_ventilation": "Circulation with ventilation",
+          "circulation": "Circulation",
+          "night_precooling": "Night precooling",
+          "unbalanced": "Unbalanced ventilation",
+          "overpressure": "Overpressure ventilation"
+        }
+      },
+      "season": {
+        "name": "Current season",
+        "state": {
+          "heating": "Heating season",
+          "non_heating": "Non-heating season"
+        }
+      },
+      "forced_state": {
+        "name": "Forced state",
+        "state": {
+          "none": "None",
+          "starting": "Starting",
+          "stopping": "Stopping",
+          "input_d1": "Input D1",
+          "input_d2": "Input D2",
+          "input_d3": "Input D3",
+          "input_d4": "Input D4",
+          "input_in1": "Input IN1",
+          "input_in2": "Input IN2",
+          "input_k1_in1": "Input INk1 of module 1",
+          "input_k1_in2": "Input INk2 of module 1",
+          "input_k1_in3": "Input INk3 of module 1",
+          "input_k1_in4": "Input INk4 of module 1",
+          "input_k2_in1": "Input INk1 of module 2",
+          "input_k2_in2": "Input INk2 of module 2",
+          "input_k2_in3": "Input INk3 of module 2",
+          "input_k2_in4": "Input INk4 of module 2",
+          "input_k1_tr1": "Input TRk1 of module 1",
+          "input_k1_tr2": "Input TRk2 of module 1",
+          "input_k1_tr3": "Input TRk3 of module 1",
+          "input_k1_tr4": "Input TRk4 of module 1",
+          "input_k1_tr5": "Input TRk5 of module 1",
+          "input_k2_tr1": "Input TRk1 of module 2",
+          "input_k2_tr2": "Input TRk2 of module 2",
+          "input_k2_tr3": "Input TRk3 of module 2",
+          "input_k2_tr4": "Input TRk4 of module 2",
+          "input_k2_tr5": "Input TRk5 of module 2",
+          "heat_pump_defrosting": "Heat pump defrosting",
+          "preheating": "Preheating",
+          "learning": "Learning",
+          "periodic_ventilation": "Periodic ventilation"
+        }
+      },
+      "fan_m1_voltage": {
+        "name": "Fan M1 control voltage"
+      },
+      "fan_m2_voltage": {
+        "name": "Fan M2 control voltage"
+      },
+      "heat_pump_demand": {
+        "name": "Heat pump demand"
+      },
+      "heat_storage_top": {
+        "name": "Heat storage top temperature"
+      },
+      "heat_storage_middle": {
+        "name": "Heat storage middle temperature"
+      }
+    },
+    "binary_sensor": {
+      "fault": {
+        "name": "Fault"
+      },
+      "filter_change_due": {
+        "name": "Filter change"
+      },
+      "filter_clogged": {
+        "name": "Filter clogged"
+      },
+      "recuperator_frozen": {
+        "name": "Heat exchanger frozen"
+      },
+      "recuperator_defrosting": {
+        "name": "Heat exchanger defrosting"
+      },
+      "heat_pump_heating": {
+        "name": "Heat pump heating"
+      },
+      "heat_pump_cooling": {
+        "name": "Heat pump cooling"
+      },
+      "heat_pump_defrosting": {
+        "name": "Heat pump defrosting"
+      }
+    },
+    "switch": {
+      "weekly_program": {
+        "name": "Weekly program"
+      },
+      "electric_heater_1": {
+        "name": "Heat storage electric heater 1"
+      },
+      "electric_heater_2": {
+        "name": "Heat storage electric heater 2"
+      }
+    },
+    "number": {
+      "heat_storage_target_top": {
+        "name": "Heat storage top target temperature"
+      },
+      "heat_storage_target_middle": {
+        "name": "Heat storage middle target temperature"
+      },
+      "season_temperature": {
+        "name": "Season changeover temperature"
+      },
+      "power": {
+        "name": "Power"
+      }
+    },
+    "button": {
+      "reset_filter_interval": {
+        "name": "Reset filter change interval"
+      },
+      "reset_alarms": {
+        "name": "Reset alarms"
+      }
+    }
+  }
+}
