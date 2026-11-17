@@ -19,6 +19,7 @@ from .settings import (
     BmsTemperatures,
     Configuration,
     HeatStorage,
+    R5Flows,
     Settings,
 )
 
@@ -37,7 +38,7 @@ READINGS = (
 )
 SETTINGS = ("settings", "heat_storage")
 # The identity is left out of a raw dump: it holds the production number.
-ALL = ("firmware", "configuration", *READINGS, *SETTINGS)
+ALL = ("firmware", "configuration", "r5_flows", *READINGS, *SETTINGS)
 
 _VENTILATION = (
     R5Power.VENTILATION_MIN,
@@ -111,6 +112,7 @@ class AtreaRD5(Device):
         # Optional: filled in by setup if the unit serves them.
         self.identity: Identity | None = None
         self.firmware: Firmware | None = None
+        self.r5_flows: R5Flows | None = None
         self.rg_inputs: BoardInputs | None = None
         self.tz_inputs: BoardInputs | None = None
         self.heat_storage: HeatStorage | None = None
@@ -122,6 +124,8 @@ class AtreaRD5(Device):
         self.firmware = await read_optional(Firmware(unit))
         await self.configuration.async_update()
         await self.digital_inputs.async_update()
+        if self.is_r5:
+            self.r5_flows = await read_optional(R5Flows(unit))
         if self.digital_inputs.rg_board:
             self.rg_inputs = BoardInputs(unit, base_offset=RG_BOARD_INPUTS)
         if self.digital_inputs.tz_board:

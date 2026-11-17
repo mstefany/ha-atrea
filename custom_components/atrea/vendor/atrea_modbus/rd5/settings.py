@@ -41,6 +41,19 @@ class Configuration(Component):
     zone_function = integer(10511, signed=False)
     """Function of the SZ1/SZ2 outputs; 1 means the unit ventilates by zone."""
     indoor_temperature_source = enum(10514, IndoorTemperatureSource)
+    automatic_ventilation_interval = integer(10502, signed=False, unit="min")
+    """Minutes per hour the unit ventilates in the automatic mode (3.2.13)."""
+    supply_fan_correction = integer(10513, unit="%")
+    """How much faster the supply fan runs than the extract fan (3.2.3).
+
+    The "unbalanced" mode applies it; at 0 that mode equals ventilation.
+    """
+    night_cooling_test_interval = integer(11429, signed=False)
+    """Time between the test runs of night precooling (3.2.12).
+
+    Between the tests the unit stands still; a test runs the fans for five
+    minutes to measure the real air temperatures.
+    """
     circulation_damper = boolean(11700)
     """The unit has a circulation damper."""
 
@@ -50,6 +63,21 @@ class Configuration(Component):
     """Allows the "circulation with ventilation" mode (table 3)."""
     outdoor_temperature_from_bms = coil(10510)
     """T-ODA is written over Modbus to H10213, at least every 90 seconds."""
+
+
+class R5Flows(Component):
+    """Air flow of each power level of an R_5 unit (3.2.30 to 3.2.35).
+
+    The source document does not list these registers; the web interface of
+    the unit names them.
+    """
+
+    circulation_min = integer(11627, signed=False, unit="m³/h")
+    circulation_norm = integer(11628, signed=False, unit="m³/h")
+    circulation_max = integer(11629, signed=False, unit="m³/h")
+    ventilation_min = integer(11630, signed=False, unit="m³/h")
+    ventilation_norm = integer(11631, signed=False, unit="m³/h")
+    ventilation_max = integer(11632, signed=False, unit="m³/h")
 
 
 class Settings(Component):

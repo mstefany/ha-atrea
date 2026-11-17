@@ -31,6 +31,7 @@ from .settings import (
     BmsTemperatures,
     Configuration,
     HeatStorage,
+    R5Flows,
     Settings,
 )
 
@@ -64,6 +65,7 @@ __all__ = [
     "OperatingMode",
     "Outputs",
     "PrimaryHeating",
+    "R5Flows",
     "R5Power",
     "Season",
     "Sensors",
