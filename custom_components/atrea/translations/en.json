@@ -209,6 +209,8 @@
           "heat_pump_defrosting": "Heat pump defrosting",
           "preheating": "Preheating",
           "learning": "Learning",
+          "heat_pump_defrosting_2": "Heat pump defrosting",
+          "filter_test": "Filter test",
           "periodic_ventilation": "Periodic ventilation"
         }
       },

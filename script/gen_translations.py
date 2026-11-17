@@ -73,6 +73,11 @@ FORCED = {
     "heat_pump_defrosting": ("Heat pump defrosting", "Odmrazování tepelného čerpadla"),
     "preheating": ("Preheating", "Předehřátí"),
     "learning": ("Learning", "Učící režim"),
+    "heat_pump_defrosting_2": (
+        "Heat pump defrosting",
+        "Odmrazování tepelného čerpadla",
+    ),
+    "filter_test": ("Filter test", "Test filtru"),
     "periodic_ventilation": ("Periodic ventilation", "Periodické větrání"),
 }
 

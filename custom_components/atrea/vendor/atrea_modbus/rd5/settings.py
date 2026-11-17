@@ -48,8 +48,8 @@ class Configuration(Component):
 
     The "unbalanced" mode applies it; at 0 that mode equals ventilation.
     """
-    night_cooling_test_interval = integer(11429, signed=False)
-    """Time between the test runs of night precooling (3.2.12).
+    night_cooling_test_interval = integer(11429, signed=False, unit="min")
+    """Time between the test runs of night precooling (3.2.12), 10-600 min.
 
     Between the tests the unit stands still; a test runs the fans for five
     minutes to measure the real air temperatures.
@@ -60,7 +60,7 @@ class Configuration(Component):
     vav_box_mode = coil(10508)
     """VAV box ventilation; when set, only Off and Ventilation are allowed."""
     circulation_with_ventilation = coil(10509)
-    """Allows the "circulation with ventilation" mode (table 3)."""
+    """Two-zone operation (3.1.51); "circulation with ventilation" needs it."""
     outdoor_temperature_from_bms = coil(10510)
     """T-ODA is written over Modbus to H10213, at least every 90 seconds."""
 

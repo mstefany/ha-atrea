@@ -209,6 +209,8 @@
           "heat_pump_defrosting": "Odmrazování tepelného čerpadla",
           "preheating": "Předehřátí",
           "learning": "Učící režim",
+          "heat_pump_defrosting_2": "Odmrazování tepelného čerpadla",
+          "filter_test": "Test filtru",
           "periodic_ventilation": "Periodické větrání"
         }
       },
