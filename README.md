@@ -86,11 +86,12 @@ the fault for that time.
 - Zones (zone 1, zone 2, both) are not in Home Assistant yet. The library can
   request a zone, but the test unit has one zone, so nobody could test it.
 - Tried on the test unit: the modes and power levels, the season, the target
-  temperature, the heat storage targets, both reset buttons, and sending the
-  room temperature (30 minutes as the only sender).
+  temperature, the heat storage targets, both reset buttons, sending the room
+  temperature (30 minutes as the only sender), and sending the outdoor
+  temperature (10 minutes; the unit followed each change within 30 seconds).
 - Not tried on a real unit: the weekly program switch, the heat storage
-  heater switches, sending the outdoor temperature, and units other than an
-  R_5 with two-zone operation.
+  heater switches, the unit's fault when the outdoor value stops, and units
+  other than an R_5 with two-zone operation.
 
 ## Languages
 
