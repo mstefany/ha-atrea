@@ -66,6 +66,13 @@ integration. The integration then sends their values with every poll, every
 30 seconds. If a sensor has no value, nothing is sent, and the unit raises its
 own sensor fault after 90 seconds.
 
+- The integration never changes the service setting itself. It reads the
+  setting when it starts; after you change it on the unit, reload the
+  integration.
+- To send the median or the mean of several room sensors, make one sensor of
+  them with the **Combine the state of several sensors** helper, and choose
+  that sensor.
+
 ## Develop
 
 The device library is copied into `custom_components/atrea/vendor`. Do not
