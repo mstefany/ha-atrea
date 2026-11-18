@@ -7,11 +7,10 @@ from modbus_connection.mock import MockModbusUnit
 import pytest
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
+from custom_components.atrea.const import CONF_CLIMATE_SETS_SEASON, DOMAIN
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
 from homeassistant.helpers import device_registry as dr
-
-from custom_components.atrea.const import CONF_CLIMATE_SETS_SEASON, DOMAIN
 
 from .conftest import SERIAL, Writes
 
@@ -228,9 +227,7 @@ async def test_other_writes(
     await call(
         hass, "select", "select_option", f"select.{P}_season", option="t_oda_plus"
     )
-    await call(
-        hass, "switch", "turn_off", f"switch.{P}_heat_storage_electric_heater_2"
-    )
+    await call(hass, "switch", "turn_off", f"switch.{P}_heat_storage_electric_heater_2")
     await call(
         hass,
         "number",
@@ -265,7 +262,9 @@ async def test_room_temperature_is_sent_to_the_unit(
     hass: HomeAssistant, entry: MockConfigEntry, writes: Writes
 ) -> None:
     hass.states.async_set(
-        "sensor.room", "21.36", {"unit_of_measurement": "°C", "device_class": "temperature"}
+        "sensor.room",
+        "21.36",
+        {"unit_of_measurement": "°C", "device_class": "temperature"},
     )
     hass.config_entries.async_update_entry(
         entry, options={"indoor_temperature_entity": "sensor.room"}
@@ -282,7 +281,9 @@ async def test_room_temperature_is_sent_to_the_unit(
 
     # When the sensor has a value again, it goes out without waiting for a poll.
     hass.states.async_set(
-        "sensor.room", "22.0", {"unit_of_measurement": "°C", "device_class": "temperature"}
+        "sensor.room",
+        "22.0",
+        {"unit_of_measurement": "°C", "device_class": "temperature"},
     )
     await hass.async_block_till_done()
     assert writes == [("holding", 10214, [220])]
@@ -290,7 +291,9 @@ async def test_room_temperature_is_sent_to_the_unit(
     # Other changes wait for the poll.
     writes.clear()
     hass.states.async_set(
-        "sensor.room", "22.4", {"unit_of_measurement": "°C", "device_class": "temperature"}
+        "sensor.room",
+        "22.4",
+        {"unit_of_measurement": "°C", "device_class": "temperature"},
     )
     await hass.async_block_till_done()
     assert writes == []
@@ -299,7 +302,9 @@ async def test_room_temperature_is_sent_to_the_unit(
     assert await hass.config_entries.async_unload(entry.entry_id)
     hass.states.async_set("sensor.room", "unavailable")
     hass.states.async_set(
-        "sensor.room", "23.0", {"unit_of_measurement": "°C", "device_class": "temperature"}
+        "sensor.room",
+        "23.0",
+        {"unit_of_measurement": "°C", "device_class": "temperature"},
     )
     await hass.async_block_till_done()
     assert writes == []

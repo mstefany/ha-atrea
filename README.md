@@ -5,7 +5,11 @@ control, over Modbus TCP. It is set up from the user interface.
 
 It uses the Modbus support that Home Assistant 2026.11 introduced: the
 integration asks the built-in `modbus` integration for a shared connection, and
-the register map lives in the [atrea-modbus](../atrea-modbus) library.
+the register map lives in the
+[atrea-modbus](https://github.com/mstefany/atrea-modbus) library.
+
+This is a community project. It is not made, endorsed or supported by
+ATREA s.r.o. See [Trademarks](#trademarks).
 
 ## How it differs from other Atrea integrations
 
@@ -111,7 +115,10 @@ edit the copy. Change the library and run:
 ```bash
 python script/vendor.py            # copy ../atrea-modbus into the integration
 python script/gen_translations.py  # write translations/*.json from script/i18n
+sh script/test.sh                  # run the tests in a Python container
 ```
+
+GitHub runs the tests, ruff, the HACS check and hassfest on every push.
 
 A separate Home Assistant for development, which shares nothing with your real
 one:
@@ -124,3 +131,15 @@ podman run -d --name atrea-ha-dev -p 127.0.0.1:8124:8123 \
 ```
 
 Then open http://localhost:8124. After a code change: `podman restart atrea-ha-dev`.
+
+## Trademarks
+
+Atrea, DUPLEX, RD5, aMotion and the logo of Atrea are trademarks or
+registered trademarks of ATREA s.r.o. This project uses the names only to say
+which units it works with. It is a community project, and it is not
+affiliated with, endorsed by or supported by ATREA s.r.o. Ask for help with
+this integration in the issues of this repository, not at Atrea.
+
+The icon that Home Assistant shows for this integration comes from the
+[Home Assistant brands](https://github.com/home-assistant/brands) repository.
+All other trademarks belong to their owners.

@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
+from pathlib import Path
 import runpy
 import sys
-from pathlib import Path
 from unittest.mock import patch
 
 SCRIPT = Path(__file__).parent.parent / "script" / "gen_translations.py"

@@ -3,4 +3,14 @@ asyncio_mode = "auto"
 testpaths = ["tests"]
 
 [tool.ruff]
-target-version = "py314"
+# Python 3.13 keeps the bracketed "except (A, B):" form; the code also runs on 3.14.
+target-version = "py313"
+# A copy of the atrea-modbus library, checked in that repository.
+extend-exclude = ["custom_components/atrea/vendor"]
+
+[tool.ruff.lint.isort]
+# The import order of Home Assistant core.
+force-sort-within-sections = true
+known-first-party = ["homeassistant"]
+combine-as-imports = true
+split-on-trailing-comma = false

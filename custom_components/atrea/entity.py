@@ -15,7 +15,6 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from .const import DOMAIN
 from .coordinator import AtreaCoordinator, AtreaRuntimeData
 
-
 WRITE_SETTLE_SECONDS = 2.0
 
 

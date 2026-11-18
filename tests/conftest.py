@@ -13,10 +13,9 @@ from modbus_connection.mock import MockModbusConnection, MockModbusUnit, WriteEv
 import pytest
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
+from custom_components.atrea.const import DOMAIN
 from homeassistant.const import CONF_HOST, CONF_PORT
 from homeassistant.core import HomeAssistant
-
-from custom_components.atrea.const import DOMAIN
 
 FIXTURES = Path(__file__).parent / "fixtures"
 SERIAL = "0A1234567"

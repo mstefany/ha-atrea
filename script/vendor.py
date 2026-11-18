@@ -29,4 +29,4 @@ shutil.copytree(
     encoding="utf-8",
     newline="\n",
 )
-print(f"Copied {package} to {TARGET / "atrea_modbus"}")
+print(f"Copied {package} to {TARGET / 'atrea_modbus'}")

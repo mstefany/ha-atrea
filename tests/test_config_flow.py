@@ -6,16 +6,15 @@ from modbus_connection import ModbusTimeoutError
 from modbus_connection.mock import MockModbusUnit
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
-from homeassistant.config_entries import SOURCE_USER
-from homeassistant.const import CONF_HOST, CONF_PORT
-from homeassistant.core import HomeAssistant
-from homeassistant.data_entry_flow import FlowResultType
-
 from custom_components.atrea.const import (
     CONF_CLIMATE_SETS_SEASON,
     CONF_INDOOR_TEMPERATURE_ENTITY,
     DOMAIN,
 )
+from homeassistant.config_entries import SOURCE_USER
+from homeassistant.const import CONF_HOST, CONF_PORT
+from homeassistant.core import HomeAssistant
+from homeassistant.data_entry_flow import FlowResultType
 
 from .conftest import SERIAL
 

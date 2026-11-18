@@ -1,0 +1,4 @@
+# Test dependencies, for CI and script/test.sh.
+pytest-homeassistant-custom-component
+modbus-connection[tmodbus]
+pymodbus
