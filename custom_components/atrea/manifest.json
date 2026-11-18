@@ -1,6 +1,7 @@
 {
   "domain": "atrea",
   "name": "Atrea",
+  "categories": ["climate.fans_ventilation"],
   "codeowners": ["@mstefany"],
   "config_flow": true,
   "dependencies": ["modbus"],
