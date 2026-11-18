@@ -89,7 +89,7 @@
   "entity.sensor.supply_flow_requested.name": "Требуемый расход приточного воздуха",
   "entity.sensor.extract_flow_requested.name": "Требуемый расход вытяжного воздуха",
   "entity.sensor.outdoor_flow_requested.name": "Требуемый расход наружного воздуха",
-  "entity.sensor.current_phase.name": "Текущая фаза",
+  "entity.sensor.current_mode.name": "Текущий режим работы",
   "entity.sensor.season.name": "Текущий сезон",
   "entity.sensor.forced_state.name": "Принудительное состояние",
   "entity.sensor.fan_m1_voltage.name": "Управляющее напряжение вентилятора M1",

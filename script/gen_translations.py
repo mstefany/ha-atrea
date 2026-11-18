@@ -172,7 +172,7 @@ TREE: dict[str, Any] = {
             "supply_flow_requested": name("Requested supply air flow"),
             "extract_flow_requested": name("Requested extract air flow"),
             "outdoor_flow_requested": name("Requested outdoor air flow"),
-            "current_phase": name("Current phase", state=MODES),
+            "current_mode": name("Current operating mode", state=MODES),
             "season": name(
                 "Current season", state=SEASONS.subset("heating", "non_heating")
             ),

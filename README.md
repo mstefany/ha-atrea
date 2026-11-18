@@ -45,7 +45,7 @@ Home Assistant 2026.11 or newer is required.
 | Switch: weekly program | Hands control to the weekly program of the unit, or takes it back. Disabled by default: it is not tested on a real unit yet |
 | Switch: heat storage electric heater 1 and 2 | For example to use photovoltaic surplus |
 | Number: heat storage targets, season changeover temperature | |
-| Sensors | Air temperatures, air flows, heat storage temperatures, current phase, season, forced state |
+| Sensors | Air temperatures, air flows, heat storage temperatures, current operating mode (what the unit runs now; it can differ from the operating mode select, for example under automatic), current season, forced state |
 | Binary sensors | Fault (with the list of faults as an attribute), filter change, filter clogged, heat pump heating / cooling / defrosting, heat exchanger frozen / defrosting |
 | Buttons | Reset the filter change interval, reset alarms |
 
@@ -85,19 +85,21 @@ the fault for that time.
 
 - Zones (zone 1, zone 2, both) are not in Home Assistant yet. The library can
   request a zone, but the test unit has one zone, so nobody could test it.
-- Not tried on a real unit: the weekly program switch, writing heat storage
-  targets and heater switches, sending the outdoor temperature, and units
-  other than an R_5 with two-zone operation. Tried on the test unit: the
-  modes and power levels, the season, the target temperature, both reset
-  buttons, and sending the room temperature (30 minutes as the only sender).
+- Tried on the test unit: the modes and power levels, the season, the target
+  temperature, the heat storage targets, both reset buttons, and sending the
+  room temperature (30 minutes as the only sender).
+- Not tried on a real unit: the weekly program switch, the heat storage
+  heater switches, sending the outdoor temperature, and units other than an
+  R_5 with two-zone operation.
 
 ## Languages
 
 English, Czech, Slovak, and the other languages of the unit's own control
 panel: Bulgarian, Croatian, Danish, French, German, Hungarian, Italian,
 Latvian, Polish, Romanian, Russian and Spanish. The mode names follow the
-panel where its wording is correct. Native speakers have not reviewed the
-translations yet; corrections are welcome. Edit `script/i18n/<language>.json`
+panel where its wording is correct. A native speaker checked Czech and
+Slovak. Native speakers have not reviewed the other languages yet;
+corrections are welcome. Edit `script/i18n/<language>.json`
 and run `python script/gen_translations.py`.
 
 ## Develop

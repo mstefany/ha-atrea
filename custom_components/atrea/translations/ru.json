@@ -163,8 +163,8 @@
       "outdoor_flow_requested": {
         "name": "Требуемый расход наружного воздуха"
       },
-      "current_phase": {
-        "name": "Текущая фаза",
+      "current_mode": {
+        "name": "Текущий режим работы",
         "state": {
           "off": "Выключено",
           "automatic": "Автомат",

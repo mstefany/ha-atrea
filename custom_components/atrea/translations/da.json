@@ -163,8 +163,8 @@
       "outdoor_flow_requested": {
         "name": "Ønsket udeluftmængde"
       },
-      "current_phase": {
-        "name": "Aktuel fase",
+      "current_mode": {
+        "name": "Aktuel driftstilstand",
         "state": {
           "off": "Slukket",
           "automatic": "Automatisk",

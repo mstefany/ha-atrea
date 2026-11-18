@@ -132,8 +132,8 @@ SENSORS: tuple[AtreaSensorEntityDescription, ...] = (
         exists_fn=lambda d: d.is_r5,
     ),
     AtreaSensorEntityDescription(
-        key="current_phase",
-        translation_key="current_phase",
+        key="current_mode",
+        translation_key="current_mode",
         component="control",
         device_class=SensorDeviceClass.ENUM,
         options=enum_options(OperatingMode),

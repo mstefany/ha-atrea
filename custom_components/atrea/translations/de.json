@@ -163,8 +163,8 @@
       "outdoor_flow_requested": {
         "name": "Angeforderter Außenluftvolumenstrom"
       },
-      "current_phase": {
-        "name": "Aktuelle Phase",
+      "current_mode": {
+        "name": "Aktuelle Betriebsart",
         "state": {
           "off": "Aus",
           "automatic": "Automatik",

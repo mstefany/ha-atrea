@@ -163,8 +163,8 @@
       "outdoor_flow_requested": {
         "name": "Requested outdoor air flow"
       },
-      "current_phase": {
-        "name": "Current phase",
+      "current_mode": {
+        "name": "Current operating mode",
         "state": {
           "off": "Off",
           "automatic": "Automatic",

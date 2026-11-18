@@ -89,7 +89,7 @@
   "entity.sensor.supply_flow_requested.name": "Portata richiesta dell'aria di mandata",
   "entity.sensor.extract_flow_requested.name": "Portata richiesta dell'aria di ripresa",
   "entity.sensor.outdoor_flow_requested.name": "Portata richiesta dell'aria esterna",
-  "entity.sensor.current_phase.name": "Fase attuale",
+  "entity.sensor.current_mode.name": "Modalità di funzionamento attuale",
   "entity.sensor.season.name": "Stagione attuale",
   "entity.sensor.forced_state.name": "Stato forzato",
   "entity.sensor.fan_m1_voltage.name": "Tensione di comando del ventilatore M1",

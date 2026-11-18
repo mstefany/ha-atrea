@@ -163,8 +163,8 @@
       "outdoor_flow_requested": {
         "name": "Traženi protok vanjskog zraka"
       },
-      "current_phase": {
-        "name": "Trenutna faza",
+      "current_mode": {
+        "name": "Trenutni način rada",
         "state": {
           "off": "Isključeno",
           "automatic": "Automatski",

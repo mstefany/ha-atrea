@@ -163,8 +163,8 @@
       "outdoor_flow_requested": {
         "name": "Wymagany przepływ powietrza zewnętrznego"
       },
-      "current_phase": {
-        "name": "Bieżąca faza",
+      "current_mode": {
+        "name": "Bieżący tryb pracy",
         "state": {
           "off": "Wyłączone",
           "automatic": "Automatyczne",

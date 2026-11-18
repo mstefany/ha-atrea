@@ -89,7 +89,7 @@
   "entity.sensor.supply_flow_requested.name": "Wymagany przepływ powietrza nawiewanego",
   "entity.sensor.extract_flow_requested.name": "Wymagany przepływ powietrza wywiewanego",
   "entity.sensor.outdoor_flow_requested.name": "Wymagany przepływ powietrza zewnętrznego",
-  "entity.sensor.current_phase.name": "Bieżąca faza",
+  "entity.sensor.current_mode.name": "Bieżący tryb pracy",
   "entity.sensor.season.name": "Bieżący sezon",
   "entity.sensor.forced_state.name": "Stan wymuszony",
   "entity.sensor.fan_m1_voltage.name": "Napięcie sterujące wentylatora M1",

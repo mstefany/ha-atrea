@@ -163,8 +163,8 @@
       "outdoor_flow_requested": {
         "name": "Заявен дебит на външния въздух"
       },
-      "current_phase": {
-        "name": "Текуща фаза",
+      "current_mode": {
+        "name": "Текущ режим на работа",
         "state": {
           "off": "Изключено",
           "automatic": "Автомат",

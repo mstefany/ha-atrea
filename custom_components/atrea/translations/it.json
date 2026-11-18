@@ -163,8 +163,8 @@
       "outdoor_flow_requested": {
         "name": "Portata richiesta dell'aria esterna"
       },
-      "current_phase": {
-        "name": "Fase attuale",
+      "current_mode": {
+        "name": "Modalità di funzionamento attuale",
         "state": {
           "off": "Spento",
           "automatic": "Automatico",

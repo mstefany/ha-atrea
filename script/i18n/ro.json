@@ -89,7 +89,7 @@
   "entity.sensor.supply_flow_requested.name": "Debitul solicitat al aerului introdus",
   "entity.sensor.extract_flow_requested.name": "Debitul solicitat al aerului extras",
   "entity.sensor.outdoor_flow_requested.name": "Debitul solicitat al aerului exterior",
-  "entity.sensor.current_phase.name": "Faza curentă",
+  "entity.sensor.current_mode.name": "Modul de funcționare curent",
   "entity.sensor.season.name": "Sezonul curent",
   "entity.sensor.forced_state.name": "Stare forțată",
   "entity.sensor.fan_m1_voltage.name": "Tensiunea de comandă a ventilatorului M1",

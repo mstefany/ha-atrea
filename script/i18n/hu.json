@@ -89,7 +89,7 @@
   "entity.sensor.supply_flow_requested.name": "Táplevegő kért térfogatárama",
   "entity.sensor.extract_flow_requested.name": "Elszívott levegő kért térfogatárama",
   "entity.sensor.outdoor_flow_requested.name": "Külső levegő kért térfogatárama",
-  "entity.sensor.current_phase.name": "Aktuális fázis",
+  "entity.sensor.current_mode.name": "Aktuális üzemmód",
   "entity.sensor.season.name": "Aktuális időszak",
   "entity.sensor.forced_state.name": "Kényszerállapot",
   "entity.sensor.fan_m1_voltage.name": "M1 ventilátor vezérlőfeszültsége",

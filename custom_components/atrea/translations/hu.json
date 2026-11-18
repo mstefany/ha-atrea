@@ -163,8 +163,8 @@
       "outdoor_flow_requested": {
         "name": "Külső levegő kért térfogatárama"
       },
-      "current_phase": {
-        "name": "Aktuális fázis",
+      "current_mode": {
+        "name": "Aktuális üzemmód",
         "state": {
           "off": "Ki",
           "automatic": "Automatikus",

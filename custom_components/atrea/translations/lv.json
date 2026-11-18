@@ -163,8 +163,8 @@
       "outdoor_flow_requested": {
         "name": "Pieprasītā āra gaisa plūsma"
       },
-      "current_phase": {
-        "name": "Pašreizējā fāze",
+      "current_mode": {
+        "name": "Pašreizējais darba režīms",
         "state": {
           "off": "Izslēgts",
           "automatic": "Automātisks",

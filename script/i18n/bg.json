@@ -89,7 +89,7 @@
   "entity.sensor.supply_flow_requested.name": "Заявен дебит на подавания въздух",
   "entity.sensor.extract_flow_requested.name": "Заявен дебит на отвеждания въздух",
   "entity.sensor.outdoor_flow_requested.name": "Заявен дебит на външния въздух",
-  "entity.sensor.current_phase.name": "Текуща фаза",
+  "entity.sensor.current_mode.name": "Текущ режим на работа",
   "entity.sensor.season.name": "Текущ сезон",
   "entity.sensor.forced_state.name": "Принудително състояние",
   "entity.sensor.fan_m1_voltage.name": "Управляващо напрежение на вентилатор M1",

@@ -89,7 +89,7 @@
   "entity.sensor.supply_flow_requested.name": "Angeforderter Zuluftvolumenstrom",
   "entity.sensor.extract_flow_requested.name": "Angeforderter Abluftvolumenstrom",
   "entity.sensor.outdoor_flow_requested.name": "Angeforderter Außenluftvolumenstrom",
-  "entity.sensor.current_phase.name": "Aktuelle Phase",
+  "entity.sensor.current_mode.name": "Aktuelle Betriebsart",
   "entity.sensor.season.name": "Aktuelle Saison",
   "entity.sensor.forced_state.name": "Zwangszustand",
   "entity.sensor.fan_m1_voltage.name": "Steuerspannung Ventilator M1",

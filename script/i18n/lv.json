@@ -89,7 +89,7 @@
   "entity.sensor.supply_flow_requested.name": "Pieprasītā pieplūdes gaisa plūsma",
   "entity.sensor.extract_flow_requested.name": "Pieprasītā nosūces gaisa plūsma",
   "entity.sensor.outdoor_flow_requested.name": "Pieprasītā āra gaisa plūsma",
-  "entity.sensor.current_phase.name": "Pašreizējā fāze",
+  "entity.sensor.current_mode.name": "Pašreizējais darba režīms",
   "entity.sensor.season.name": "Pašreizējā sezona",
   "entity.sensor.forced_state.name": "Piespiedu stāvoklis",
   "entity.sensor.fan_m1_voltage.name": "Ventilatora M1 vadības spriegums",

@@ -89,7 +89,7 @@
   "entity.sensor.supply_flow_requested.name": "Débit d'air soufflé demandé",
   "entity.sensor.extract_flow_requested.name": "Débit d'air extrait demandé",
   "entity.sensor.outdoor_flow_requested.name": "Débit d'air extérieur demandé",
-  "entity.sensor.current_phase.name": "Phase actuelle",
+  "entity.sensor.current_mode.name": "Mode de fonctionnement actuel",
   "entity.sensor.season.name": "Saison actuelle",
   "entity.sensor.forced_state.name": "État forcé",
   "entity.sensor.fan_m1_voltage.name": "Tension de commande du ventilateur M1",

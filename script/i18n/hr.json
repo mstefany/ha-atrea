@@ -89,7 +89,7 @@
   "entity.sensor.supply_flow_requested.name": "Traženi protok dovodnog zraka",
   "entity.sensor.extract_flow_requested.name": "Traženi protok odsisnog zraka",
   "entity.sensor.outdoor_flow_requested.name": "Traženi protok vanjskog zraka",
-  "entity.sensor.current_phase.name": "Trenutna faza",
+  "entity.sensor.current_mode.name": "Trenutni način rada",
   "entity.sensor.season.name": "Trenutna sezona",
   "entity.sensor.forced_state.name": "Prisilno stanje",
   "entity.sensor.fan_m1_voltage.name": "Upravljački napon ventilatora M1",

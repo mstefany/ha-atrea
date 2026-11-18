@@ -163,8 +163,8 @@
       "outdoor_flow_requested": {
         "name": "Debitul solicitat al aerului exterior"
       },
-      "current_phase": {
-        "name": "Faza curentă",
+      "current_mode": {
+        "name": "Modul de funcționare curent",
         "state": {
           "off": "Oprit",
           "automatic": "Automat",

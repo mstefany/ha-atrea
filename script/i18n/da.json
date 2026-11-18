@@ -89,7 +89,7 @@
   "entity.sensor.supply_flow_requested.name": "Ønsket indblæsningsluftmængde",
   "entity.sensor.extract_flow_requested.name": "Ønsket udsugningsluftmængde",
   "entity.sensor.outdoor_flow_requested.name": "Ønsket udeluftmængde",
-  "entity.sensor.current_phase.name": "Aktuel fase",
+  "entity.sensor.current_mode.name": "Aktuel driftstilstand",
   "entity.sensor.season.name": "Aktuel sæson",
   "entity.sensor.forced_state.name": "Tvangstilstand",
   "entity.sensor.fan_m1_voltage.name": "Styrespænding for ventilator M1",

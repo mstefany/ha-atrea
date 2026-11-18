@@ -89,7 +89,7 @@
   "entity.sensor.supply_flow_requested.name": "Požadovaný prietok privádzaného vzduchu",
   "entity.sensor.extract_flow_requested.name": "Požadovaný prietok odvádzaného vzduchu",
   "entity.sensor.outdoor_flow_requested.name": "Požadovaný prietok vonkajšieho vzduchu",
-  "entity.sensor.current_phase.name": "Aktuálna fáza",
+  "entity.sensor.current_mode.name": "Aktuálny režim",
   "entity.sensor.season.name": "Aktuálna sezóna",
   "entity.sensor.forced_state.name": "Vynútený stav",
   "entity.sensor.fan_m1_voltage.name": "Riadiace napätie ventilátora M1",

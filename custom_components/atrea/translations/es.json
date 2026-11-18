@@ -163,8 +163,8 @@
       "outdoor_flow_requested": {
         "name": "Caudal de aire exterior solicitado"
       },
-      "current_phase": {
-        "name": "Fase actual",
+      "current_mode": {
+        "name": "Modo de funcionamiento actual",
         "state": {
           "off": "Apagado",
           "automatic": "Automático",

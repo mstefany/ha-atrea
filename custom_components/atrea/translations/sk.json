@@ -163,8 +163,8 @@
       "outdoor_flow_requested": {
         "name": "Požadovaný prietok vonkajšieho vzduchu"
       },
-      "current_phase": {
-        "name": "Aktuálna fáza",
+      "current_mode": {
+        "name": "Aktuálny režim",
         "state": {
           "off": "Vypnuté",
           "automatic": "Automat",

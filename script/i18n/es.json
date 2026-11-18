@@ -89,7 +89,7 @@
   "entity.sensor.supply_flow_requested.name": "Caudal de aire de impulsión solicitado",
   "entity.sensor.extract_flow_requested.name": "Caudal de aire de extracción solicitado",
   "entity.sensor.outdoor_flow_requested.name": "Caudal de aire exterior solicitado",
-  "entity.sensor.current_phase.name": "Fase actual",
+  "entity.sensor.current_mode.name": "Modo de funcionamiento actual",
   "entity.sensor.season.name": "Temporada actual",
   "entity.sensor.forced_state.name": "Estado forzado",
   "entity.sensor.fan_m1_voltage.name": "Tensión de control del ventilador M1",
