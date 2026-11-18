@@ -27,6 +27,7 @@ from homeassistant.helpers.selector import (
 )
 
 from .const import (
+    CONF_CLIMATE_SETS_SEASON,
     CONF_INDOOR_TEMPERATURE_ENTITY,
     CONF_OUTDOOR_TEMPERATURE_ENTITY,
     DEFAULT_PORT,
@@ -54,6 +55,7 @@ OPTIONS_SCHEMA = vol.Schema(
     {
         vol.Optional(CONF_INDOOR_TEMPERATURE_ENTITY): TEMPERATURE_SENSOR,
         vol.Optional(CONF_OUTDOOR_TEMPERATURE_ENTITY): TEMPERATURE_SENSOR,
+        vol.Optional(CONF_CLIMATE_SETS_SEASON, default=False): bool,
     }
 )
 
@@ -114,7 +116,7 @@ class AtreaConfigFlow(ConfigFlow, domain=DOMAIN):
 
 
 class AtreaOptionsFlow(OptionsFlow):
-    """Choose the sensors whose temperature is sent to the unit."""
+    """Choose the temperatures sent to the unit and how the climate entity acts."""
 
     async def async_step_init(
         self, user_input: dict[str, Any] | None = None

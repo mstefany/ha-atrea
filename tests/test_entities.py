@@ -8,10 +8,10 @@ import pytest
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from homeassistant.core import HomeAssistant
-from homeassistant.exceptions import HomeAssistantError
+from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
 from homeassistant.helpers import device_registry as dr
 
-from custom_components.atrea.const import DOMAIN
+from custom_components.atrea.const import CONF_CLIMATE_SETS_SEASON, DOMAIN
 
 from .conftest import SERIAL, Writes
 
@@ -126,8 +126,29 @@ async def test_climate_writes(
     assert writes == [("holding", 10709, [2])]
     assert state(hass, CLIMATE) == "heat"
 
-    # Cool is the non-heating season.
+    # By default the climate entity does not change the season.
+    assert hass.states.get(CLIMATE).attributes["hvac_modes"] == ["off", "heat"]
     writes.clear()
+    with pytest.raises(ServiceValidationError):
+        await call(hass, "climate", "set_hvac_mode", CLIMATE, hvac_mode="cool")
+    assert writes == []
+
+
+async def test_climate_changes_the_season_when_allowed(
+    hass: HomeAssistant, entry: MockConfigEntry, writes: Writes
+) -> None:
+    hass.config_entries.async_update_entry(
+        entry, options={CONF_CLIMATE_SETS_SEASON: True}
+    )
+    assert await hass.config_entries.async_setup(entry.entry_id)
+    await hass.async_block_till_done()
+    assert hass.states.get(CLIMATE).attributes["hvac_modes"] == [
+        "off",
+        "heat",
+        "cool",
+        "heat_cool",
+    ]
+    # Cool is the non-heating season.
     await call(hass, "climate", "set_hvac_mode", CLIMATE, hvac_mode="cool")
     assert writes == [("holding", 11401, [1])]
     assert state(hass, CLIMATE) == "cool"

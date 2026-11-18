@@ -27,12 +27,19 @@
         "description": "The unit can take the room and the outdoor temperature from Home Assistant. This needs the matching service setting on the unit (temperature source BMS).",
         "data": {
           "indoor_temperature_entity": "Room temperature sensor",
-          "outdoor_temperature_entity": "Outdoor temperature sensor"
+          "outdoor_temperature_entity": "Outdoor temperature sensor",
+          "climate_sets_season": "Climate entity can change the season"
+        },
+        "data_description": {
+          "climate_sets_season": "Off: the climate entity switches the unit on and off only; change the season with the season select. On: heat, cool and heat/cool set the heating season, the non-heating season and T-ODA, also when a voice assistant or an automation asks."
         }
       }
     }
   },
   "exceptions": {
+    "season_locked": {
+      "message": "The climate entity does not change the season. Use the season select, or allow it in the integration options."
+    },
     "write_failed": {
       "message": "The unit did not accept the change: {error}"
     }

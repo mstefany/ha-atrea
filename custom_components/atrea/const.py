@@ -15,3 +15,5 @@ SETTINGS_SCAN_INTERVAL = timedelta(minutes=5)
 # Options: sensors whose temperature is sent to the unit.
 CONF_INDOOR_TEMPERATURE_ENTITY = "indoor_temperature_entity"
 CONF_OUTDOOR_TEMPERATURE_ENTITY = "outdoor_temperature_entity"
+# Option: the HVAC mode of the climate entity may change the season.
+CONF_CLIMATE_SETS_SEASON = "climate_sets_season"

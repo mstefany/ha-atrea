@@ -137,11 +137,27 @@ TREE: dict[str, Any] = {
                         "Outdoor temperature sensor",
                         "Čidlo venkovní teploty",
                     ),
+                    "climate_sets_season": (
+                        "Climate entity can change the season",
+                        "Klimatizační entita může měnit sezónu",
+                    ),
+                },
+                "data_description": {
+                    "climate_sets_season": (
+                        "Off: the climate entity switches the unit on and off only; change the season with the season select. On: heat, cool and heat/cool set the heating season, the non-heating season and T-ODA, also when a voice assistant or an automation asks.",
+                        "Vypnuto: klimatizační entita jednotku jen zapíná a vypíná; sezónu měňte volbou sezóny. Zapnuto: topení, chlazení a automatika nastaví topnou sezónu, netopnou sezónu a T-ODA, i na pokyn hlasového asistenta nebo automatizace.",
+                    ),
                 },
             }
         }
     },
     "exceptions": {
+        "season_locked": {
+            "message": (
+                "The climate entity does not change the season. Use the season select, or allow it in the integration options.",
+                "Klimatizační entita sezónu nemění. Použijte volbu sezóny, nebo to povolte v nastavení integrace.",
+            )
+        },
         "write_failed": {
             "message": (
                 "The unit did not accept the change: {error}",

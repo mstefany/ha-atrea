@@ -27,12 +27,19 @@
         "description": "Jednotka může přebírat vnitřní a venkovní teplotu z Home Assistanta. Na jednotce musí být nastaven odpovídající zdroj teploty (BMS).",
         "data": {
           "indoor_temperature_entity": "Čidlo vnitřní teploty",
-          "outdoor_temperature_entity": "Čidlo venkovní teploty"
+          "outdoor_temperature_entity": "Čidlo venkovní teploty",
+          "climate_sets_season": "Klimatizační entita může měnit sezónu"
+        },
+        "data_description": {
+          "climate_sets_season": "Vypnuto: klimatizační entita jednotku jen zapíná a vypíná; sezónu měňte volbou sezóny. Zapnuto: topení, chlazení a automatika nastaví topnou sezónu, netopnou sezónu a T-ODA, i na pokyn hlasového asistenta nebo automatizace."
         }
       }
     }
   },
   "exceptions": {
+    "season_locked": {
+      "message": "Klimatizační entita sezónu nemění. Použijte volbu sezóny, nebo to povolte v nastavení integrace."
+    },
     "write_failed": {
       "message": "Jednotka změnu nepřijala: {error}"
     }

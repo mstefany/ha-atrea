@@ -11,7 +11,11 @@ from homeassistant.const import CONF_HOST, CONF_PORT
 from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResultType
 
-from custom_components.atrea.const import DOMAIN
+from custom_components.atrea.const import (
+    CONF_CLIMATE_SETS_SEASON,
+    CONF_INDOOR_TEMPERATURE_ENTITY,
+    DOMAIN,
+)
 
 from .conftest import SERIAL
 
@@ -76,3 +80,22 @@ async def test_same_unit_is_not_added_twice(
     assert result["reason"] == "already_configured"
     # The unit moved to a new address: the entry follows it.
     assert entry.data[CONF_HOST] == "192.0.2.99"
+
+
+async def test_options_flow_saves_the_choices(
+    hass: HomeAssistant, loaded: MockConfigEntry
+) -> None:
+    result = await hass.config_entries.options.async_init(loaded.entry_id)
+    assert result["type"] is FlowResultType.FORM
+    result = await hass.config_entries.options.async_configure(
+        result["flow_id"],
+        {
+            CONF_INDOOR_TEMPERATURE_ENTITY: "sensor.room",
+            CONF_CLIMATE_SETS_SEASON: True,
+        },
+    )
+    assert result["type"] is FlowResultType.CREATE_ENTRY
+    assert loaded.options == {
+        CONF_INDOOR_TEMPERATURE_ENTITY: "sensor.room",
+        CONF_CLIMATE_SETS_SEASON: True,
+    }

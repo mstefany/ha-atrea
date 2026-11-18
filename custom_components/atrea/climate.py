@@ -23,8 +23,10 @@ from homeassistant.components.climate import (
 )
 from homeassistant.const import ATTR_TEMPERATURE, UnitOfTemperature
 from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import ServiceValidationError
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
+from .const import CONF_CLIMATE_SETS_SEASON, DOMAIN
 from .coordinator import AtreaConfigEntry, AtreaRuntimeData
 from .entity import AtreaEntity, AtreaEntityDescription, option_slug
 from .vendor.atrea_modbus.rd5 import (
@@ -71,12 +73,6 @@ class AtreaClimate(AtreaEntity, ClimateEntity):
     _attr_min_temp = MIN_TEMPERATURE
     _attr_max_temp = MAX_TEMPERATURE
     _attr_target_temperature_step = 0.5
-    _attr_hvac_modes = [
-        HVACMode.OFF,
-        HVACMode.HEAT,
-        HVACMode.COOL,
-        HVACMode.HEAT_COOL,
-    ]
 
     def __init__(self, runtime_data: AtreaRuntimeData) -> None:
         """Initialize the climate entity."""
@@ -144,6 +140,26 @@ class AtreaClimate(AtreaEntity, ClimateEntity):
             return HVACMode.OFF
         season = self.device.settings.season_mode
         return SEASON_TO_HVAC.get(season) if season is not None else None
+
+    @property
+    def _sets_season(self) -> bool:
+        """Whether the HVAC mode may change the season (an option)."""
+        options = self.coordinator.config_entry.options
+        return bool(options.get(CONF_CLIMATE_SETS_SEASON, False))
+
+    @property
+    def hvac_modes(self) -> list[HVACMode]:
+        """Off and the seasons; by default only the season the unit is set to.
+
+        The season decides whether the unit heats at all, and it changes about
+        twice a year. By default a generic command, such as a voice assistant
+        asking for cooling, cannot change it; the season select can.
+        """
+        if self._sets_season:
+            return [HVACMode.OFF, HVACMode.HEAT, HVACMode.COOL, HVACMode.HEAT_COOL]
+        season = self.device.settings.season_mode
+        current = SEASON_TO_HVAC.get(season) if season is not None else None
+        return [HVACMode.OFF] if current is None else [HVACMode.OFF, current]
 
     @property
     def hvac_action(self) -> HVACAction | None:
@@ -217,7 +233,12 @@ class AtreaClimate(AtreaEntity, ClimateEntity):
         season = HVAC_TO_SEASON[hvac_mode]
         current = self.device.settings.season_mode
         # Both automatic season modes show as heat/cool; keep the one in use.
-        if SEASON_TO_HVAC.get(current) is not hvac_mode:  # type: ignore[arg-type]
+        if current is None or SEASON_TO_HVAC.get(current) is not hvac_mode:
+            if not self._sets_season:
+                raise ServiceValidationError(
+                    translation_domain=DOMAIN,
+                    translation_key="season_locked",
+                )
             await self._async_write(self.device.settings.write("season_mode", season))
         if self._mode is OperatingMode.OFF:
             await self._async_write(self.device.async_set_mode(self._resume_mode))
