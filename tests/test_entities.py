@@ -134,6 +134,46 @@ async def test_climate_writes(
     assert state(hass, f"select.{P}_season") == "non_heating"
 
 
+async def test_night_precooling_gets_its_level_before_the_mode(
+    hass: HomeAssistant, unit: MockModbusUnit, entry: MockConfigEntry, writes: Writes
+) -> None:
+    unit.holding[11401] = unit.input[11401] = 1
+    assert await hass.config_entries.async_setup(entry.entry_id)
+    await hass.async_block_till_done()
+    await call(
+        hass, "climate", "set_preset_mode", CLIMATE, preset_mode="night_precooling"
+    )
+    # A combined level in night precooling stops the fans of a real unit.
+    assert writes == [("holding", 10708, [12]), ("holding", 10709, [5])]
+    assert hass.states.get(CLIMATE).attributes["fan_mode"] == "ventilation_max"
+
+
+async def test_mode_set_on_the_panel_is_a_valid_preset(
+    hass: HomeAssistant, unit: MockModbusUnit, entry: MockConfigEntry
+) -> None:
+    # Night precooling requested in the heating season, from the panel.
+    unit.holding[10709] = unit.holding[10705] = unit.holding[10715] = 5
+    unit.holding[10708] = unit.holding[10704] = unit.holding[10714] = 11
+    assert await hass.config_entries.async_setup(entry.entry_id)
+    await hass.async_block_till_done()
+    climate = hass.states.get(CLIMATE)
+    assert climate.attributes["preset_mode"] == "night_precooling"
+    assert "night_precooling" in climate.attributes["preset_modes"]
+
+
+async def test_power_number_follows_the_fan_regulation(
+    hass: HomeAssistant, unit: MockModbusUnit, entry: MockConfigEntry
+) -> None:
+    unit.holding[10510] = 0
+    unit.holding[10708] = unit.holding[10704] = unit.holding[10714] = 50
+    assert await hass.config_entries.async_setup(entry.entry_id)
+    await hass.async_block_till_done()
+    power = hass.states.get(f"number.{P}_power")
+    assert power is not None
+    assert power.attributes["min"] == 12
+    assert power.state == "50"
+
+
 async def test_weekly_program_makes_a_change_temporary(
     hass: HomeAssistant, unit: MockModbusUnit, entry: MockConfigEntry, writes: Writes
 ) -> None:

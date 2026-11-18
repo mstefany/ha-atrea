@@ -9,7 +9,7 @@ from modbus_connection.model import Device, Raw, UpdateReport, read_optional
 
 from .alarms import Alarms
 from .control import Control
-from .enums import FanRegulation, OperatingMode, R5Power, Season
+from .enums import ControlSource, FanRegulation, OperatingMode, R5Power, Season
 from .identity import Firmware, Identity
 from .outputs import DigitalInputs, Outputs
 from .sensors import (
@@ -231,17 +231,44 @@ class AtreaRD5(Device):
             return None
 
     async def async_set_mode(self, mode: OperatingMode) -> None:
-        """Request an operating mode the unit accepts now."""
+        """Request an operating mode the unit accepts now.
+
+        On an R_5 unit the requested power moves to the matching level of the
+        family the new mode takes, so the request says what the unit will do.
+        The order of the two writes keeps night precooling from ever seeing a
+        level of another family, even for the moment between them: with a
+        combined level the unit stops its fans in that mode.
+        """
         mode = OperatingMode(mode)
         if mode not in self.available_modes:
             raise ValueError(f"the unit does not accept {mode.name.lower()} now")
-        await self.control.async_set_mode(mode)
-        # Keep the requested power in the family the new mode takes, so the
-        # request says what the unit will do.
-        current = self.r5_power
-        if current is not None and (level := r5_power_for_mode(current, mode)):
-            if level is not current:
-                await self.control.async_set_power(level)
+        # The control panel or the weekly program may have changed the request
+        # since the last poll.
+        await self.control.async_update()
+        level = None
+        if (current := self.r5_power) is not None:
+            level = r5_power_for_mode(current, mode)
+            if level is current:
+                level = None
+        if level is not None and mode is OperatingMode.NIGHT_PRECOOLING:
+            await self.control.async_set_power(level)
+            level = None
+        if not self._is_set_by_hand("mode_source", "requested_mode", mode):
+            await self.control.async_set_mode(mode)
+        if level is not None:
+            await self.control.async_set_power(level)
+
+    def _is_set_by_hand(self, source: str, field: str, value: int) -> bool:
+        """Whether the unit already has this value, set by hand.
+
+        Writing it again would change nothing. Under the weekly program a
+        write is still needed, to make the value a temporary override.
+        """
+        control = self.control
+        return (
+            getattr(control, source) is ControlSource.MANUAL
+            and getattr(control, field) == value
+        )
 
     def _check_power(self, power: int) -> None:
         """Refuse a power value this type of fan regulation does not take."""
@@ -264,13 +291,20 @@ class AtreaRD5(Device):
             raise ValueError(f"power {power} is not valid for this unit")
 
     async def async_set_power(self, power: int) -> None:
-        """Request a power this unit takes; see ``FanRegulation``."""
+        """Request a power this unit takes; see ``FanRegulation``.
+
+        On an R_5 unit a level of another family is moved to the matching
+        level of the family the requested mode takes.
+        """
         power = int(power)
+        # Read the requested mode fresh: it decides what a power means.
+        await self.control.async_update()
         self._check_power(power)
         mode = self.control.requested_mode
         if self.has_power_levels and mode is not None:
             power = r5_power_for_mode(R5Power(power), mode) or power
-        await self.control.async_set_power(power)
+        if not self._is_set_by_hand("power_source", "requested_power", power):
+            await self.control.async_set_power(power)
 
     async def async_reset_alarms(self) -> None:
         """Clear the alarms that allow a reset."""

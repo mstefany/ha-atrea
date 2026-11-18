@@ -24,7 +24,7 @@ from .enums import (
 )
 from .identity import SERIAL_LENGTH, SERIAL_REGISTER, Firmware, Identity
 from .outputs import DigitalInputs, Outputs
-from .sensors import BoardInputs, Sensors
+from .sensors import BoardInputs, ModeLimits, Sensors
 from .settings import (
     MAX_STORAGE_TEMPERATURE,
     MIN_STORAGE_TEMPERATURE,

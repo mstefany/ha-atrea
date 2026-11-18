@@ -19,6 +19,9 @@ from .coordinator import AtreaConfigEntry
 from .entity import AtreaEntity, AtreaEntityDescription
 from .vendor.atrea_modbus.rd5 import AtreaRD5, Cooling, PrimaryHeating
 
+# The coordinators fetch the data; the entities only read it.
+PARALLEL_UPDATES = 0
+
 
 @dataclass(frozen=True, kw_only=True)
 class AtreaBinarySensorEntityDescription(

@@ -170,11 +170,14 @@ class AtreaClimate(AtreaEntity, ClimateEntity):
     @property
     def preset_modes(self) -> list[str]:
         """The operating modes the unit accepts now."""
-        return [
-            option_slug(mode)
-            for mode in self.device.available_modes
-            if mode is not OperatingMode.OFF
+        modes = [
+            mode for mode in self.device.available_modes if mode is not OperatingMode.OFF
         ]
+        # The panel or the weekly program may run a mode Home Assistant would
+        # not offer now; it must still be a valid preset.
+        if (current := self._mode) not in (None, OperatingMode.OFF, *modes):
+            modes.append(current)
+        return [option_slug(mode) for mode in modes]
 
     @property
     def preset_mode(self) -> str | None:

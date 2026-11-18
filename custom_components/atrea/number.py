@@ -41,6 +41,24 @@ def _write_storage(device: AtreaRD5, field: str, value: float) -> Awaitable[None
     return device.heat_storage.write(field, value)
 
 
+def _power(
+    regulation: FanRegulation, low: int, high: int, unit: str | None
+) -> AtreaNumberEntityDescription:
+    """The power of a unit with this fan regulation."""
+    return AtreaNumberEntityDescription(
+        key="power",
+        translation_key="power",
+        component="control",
+        native_unit_of_measurement=unit,
+        native_min_value=low,
+        native_max_value=high,
+        native_step=1,
+        value_fn=lambda d: d.control.requested_power,
+        write_fn=lambda d, value: d.async_set_power(int(value)),
+        exists_fn=lambda d: d.configuration.fan_regulation is regulation,
+    )
+
+
 def _storage_target(key: str, field: str) -> AtreaNumberEntityDescription:
     return AtreaNumberEntityDescription(
         key=key,
@@ -75,26 +93,13 @@ NUMBERS: tuple[AtreaNumberEntityDescription, ...] = (
         value_fn=lambda d: d.settings.season_temperature,
         write_fn=lambda d, value: d.settings.write("season_temperature", value),
     ),
-    # Units other than R_5 take the power as a number.
-    AtreaNumberEntityDescription(
-        key="power",
-        translation_key="power",
-        component="control",
-        native_unit_of_measurement=PERCENTAGE,
-        native_min_value=1,
-        native_max_value=100,
-        native_step=1,
-        value_fn=lambda d: d.control.requested_power,
-        write_fn=lambda d, value: d.async_set_power(int(value)),
-        exists_fn=lambda d: (
-            d.configuration.fan_regulation
-            in (
-                FanRegulation.DIRECT,
-                FanRegulation.CONSTANT_FLOW,
-                FanRegulation.ANALOG_INPUTS,
-            )
-        ),
-    ),
+    # Units other than R_5 take the power as a number; its range depends on
+    # the fan regulation.
+    _power(FanRegulation.DIRECT, 12, 100, PERCENTAGE),
+    _power(FanRegulation.ANALOG_INPUTS, 12, 100, PERCENTAGE),
+    _power(FanRegulation.CONSTANT_FLOW, 1, 100, PERCENTAGE),
+    # 1 is night, 2 is day.
+    _power(FanRegulation.CONSTANT_PRESSURE, 1, 2, None),
     # An R_5 unit without two-zone operation takes levels 1 to 9 (Min/Min to
     # Max/Max) in the automatic mode and 1 to 3 (Min to Max) in the others.
     # Untested: the test unit has two-zone operation.

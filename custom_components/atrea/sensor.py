@@ -24,6 +24,9 @@ from .coordinator import AtreaConfigEntry
 from .entity import AtreaEntity, AtreaEntityDescription, enum_options, option_slug
 from .vendor.atrea_modbus.rd5 import AtreaRD5, ForcedState, OperatingMode, Season
 
+# The coordinators fetch the data; the entities only read it.
+PARALLEL_UPDATES = 0
+
 
 @dataclass(frozen=True, kw_only=True)
 class AtreaSensorEntityDescription(SensorEntityDescription, AtreaEntityDescription):
