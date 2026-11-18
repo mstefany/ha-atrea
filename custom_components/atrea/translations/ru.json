@@ -1,0 +1,303 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "description": "Сначала включите Modbus TCP на установке: сервисный параметр 3.15.1.",
+        "data": {
+          "host": "Хост",
+          "port": "Порт"
+        },
+        "data_description": {
+          "host": "Имя хоста или IP-адрес установки.",
+          "port": "Порт Modbus TCP установки."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Не удалось подключиться: {error}",
+      "not_rd5": "Устройство отвечает, но не как установка Atrea с системой управления RD5."
+    },
+    "abort": {
+      "already_configured": "Это устройство уже добавлено в Home Assistant."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "description": "Установка может получать температуру в помещении и наружную температуру из Home Assistant. Для этого на установке нужна соответствующая сервисная настройка (источник температуры BMS).",
+        "data": {
+          "indoor_temperature_entity": "Датчик температуры в помещении",
+          "outdoor_temperature_entity": "Датчик наружной температуры",
+          "climate_sets_season": "Объект климата может менять сезон"
+        },
+        "data_description": {
+          "climate_sets_season": "Выключено: объект климата только включает и выключает установку; сезон меняйте через объект «Сезон». Включено: «Обогрев», «Охлаждение» и «Обогрев / Охлаждение» устанавливают отопительный сезон, неотопительный сезон и T-ODA, в том числе по запросу голосового помощника или автоматизации."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "season_locked": {
+      "message": "Объект климата не меняет сезон. Используйте объект «Сезон» или разрешите это в настройках интеграции."
+    },
+    "write_failed": {
+      "message": "Установка не приняла изменение: {error}"
+    }
+  },
+  "entity": {
+    "climate": {
+      "unit": {
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "off": "Выключено",
+              "automatic": "Автомат",
+              "ventilation": "Вентиляция",
+              "circulation_with_ventilation": "Циркуляция с вентиляцией",
+              "circulation": "Циркуляция",
+              "night_precooling": "Ночное предварительное охлаждение",
+              "unbalanced": "Несбалансированная вентиляция",
+              "overpressure": "Вентиляция с избыточным давлением"
+            }
+          },
+          "fan_mode": {
+            "state": {
+              "ventilation_min": "Вентиляция Min",
+              "ventilation_norm": "Вентиляция Norm",
+              "ventilation_max": "Вентиляция Max",
+              "circulation_min": "Циркуляция Min",
+              "circulation_norm": "Циркуляция Norm",
+              "circulation_max": "Циркуляция Max",
+              "min_min": "Циркуляция Min / вентиляция Min",
+              "min_norm": "Циркуляция Min / вентиляция Norm",
+              "min_max": "Циркуляция Min / вентиляция Max",
+              "norm_min": "Циркуляция Norm / вентиляция Min",
+              "norm_norm": "Циркуляция Norm / вентиляция Norm",
+              "norm_max": "Циркуляция Norm / вентиляция Max",
+              "max_min": "Циркуляция Max / вентиляция Min",
+              "max_norm": "Циркуляция Max / вентиляция Norm",
+              "max_max": "Циркуляция Max / вентиляция Max"
+            }
+          }
+        }
+      }
+    },
+    "select": {
+      "operating_mode": {
+        "name": "Режим работы",
+        "state": {
+          "off": "Выключено",
+          "automatic": "Автомат",
+          "ventilation": "Вентиляция",
+          "circulation_with_ventilation": "Циркуляция с вентиляцией",
+          "circulation": "Циркуляция",
+          "night_precooling": "Ночное предварительное охлаждение",
+          "unbalanced": "Несбалансированная вентиляция",
+          "overpressure": "Вентиляция с избыточным давлением"
+        }
+      },
+      "power_level": {
+        "name": "Производительность",
+        "state": {
+          "ventilation_min": "Вентиляция Min",
+          "ventilation_norm": "Вентиляция Norm",
+          "ventilation_max": "Вентиляция Max",
+          "circulation_min": "Циркуляция Min",
+          "circulation_norm": "Циркуляция Norm",
+          "circulation_max": "Циркуляция Max",
+          "min_min": "Циркуляция Min / вентиляция Min",
+          "min_norm": "Циркуляция Min / вентиляция Norm",
+          "min_max": "Циркуляция Min / вентиляция Max",
+          "norm_min": "Циркуляция Norm / вентиляция Min",
+          "norm_norm": "Циркуляция Norm / вентиляция Norm",
+          "norm_max": "Циркуляция Norm / вентиляция Max",
+          "max_min": "Циркуляция Max / вентиляция Min",
+          "max_norm": "Циркуляция Max / вентиляция Norm",
+          "max_max": "Циркуляция Max / вентиляция Max"
+        }
+      },
+      "season_mode": {
+        "name": "Сезон",
+        "state": {
+          "heating": "Отопительный сезон",
+          "non_heating": "Неотопительный сезон",
+          "t_oda": "Автоматически по T-ODA",
+          "t_oda_plus": "Автоматически по T-ODA+"
+        }
+      }
+    },
+    "sensor": {
+      "outdoor_air": {
+        "name": "Температура наружного воздуха"
+      },
+      "supply_air": {
+        "name": "Температура приточного воздуха"
+      },
+      "extract_air": {
+        "name": "Температура вытяжного воздуха"
+      },
+      "exhaust_air": {
+        "name": "Температура выбрасываемого воздуха"
+      },
+      "indoor_air": {
+        "name": "Температура в помещении"
+      },
+      "outdoor_air_average": {
+        "name": "Средняя температура наружного воздуха"
+      },
+      "supply_flow": {
+        "name": "Расход приточного воздуха"
+      },
+      "extract_flow": {
+        "name": "Расход вытяжного воздуха"
+      },
+      "outdoor_flow": {
+        "name": "Расход наружного воздуха"
+      },
+      "supply_flow_requested": {
+        "name": "Требуемый расход приточного воздуха"
+      },
+      "extract_flow_requested": {
+        "name": "Требуемый расход вытяжного воздуха"
+      },
+      "outdoor_flow_requested": {
+        "name": "Требуемый расход наружного воздуха"
+      },
+      "current_phase": {
+        "name": "Текущая фаза",
+        "state": {
+          "off": "Выключено",
+          "automatic": "Автомат",
+          "ventilation": "Вентиляция",
+          "circulation_with_ventilation": "Циркуляция с вентиляцией",
+          "circulation": "Циркуляция",
+          "night_precooling": "Ночное предварительное охлаждение",
+          "unbalanced": "Несбалансированная вентиляция",
+          "overpressure": "Вентиляция с избыточным давлением"
+        }
+      },
+      "season": {
+        "name": "Текущий сезон",
+        "state": {
+          "heating": "Отопительный сезон",
+          "non_heating": "Неотопительный сезон"
+        }
+      },
+      "forced_state": {
+        "name": "Принудительное состояние",
+        "state": {
+          "none": "Нет",
+          "starting": "Запуск",
+          "stopping": "Выбег",
+          "input_d1": "Вход D1",
+          "input_d2": "Вход D2",
+          "input_d3": "Вход D3",
+          "input_d4": "Вход D4",
+          "input_in1": "Вход IN1",
+          "input_in2": "Вход IN2",
+          "input_k1_in1": "Вход INk1 модуля 1",
+          "input_k1_in2": "Вход INk2 модуля 1",
+          "input_k1_in3": "Вход INk3 модуля 1",
+          "input_k1_in4": "Вход INk4 модуля 1",
+          "input_k2_in1": "Вход INk1 модуля 2",
+          "input_k2_in2": "Вход INk2 модуля 2",
+          "input_k2_in3": "Вход INk3 модуля 2",
+          "input_k2_in4": "Вход INk4 модуля 2",
+          "input_k1_tr1": "Вход TRk1 модуля 1",
+          "input_k1_tr2": "Вход TRk2 модуля 1",
+          "input_k1_tr3": "Вход TRk3 модуля 1",
+          "input_k1_tr4": "Вход TRk4 модуля 1",
+          "input_k1_tr5": "Вход TRk5 модуля 1",
+          "input_k2_tr1": "Вход TRk1 модуля 2",
+          "input_k2_tr2": "Вход TRk2 модуля 2",
+          "input_k2_tr3": "Вход TRk3 модуля 2",
+          "input_k2_tr4": "Вход TRk4 модуля 2",
+          "input_k2_tr5": "Вход TRk5 модуля 2",
+          "heat_pump_defrosting": "Оттаивание теплового насоса",
+          "preheating": "Предварительный нагрев",
+          "learning": "Обучение",
+          "heat_pump_defrosting_2": "Оттаивание теплового насоса",
+          "filter_test": "Тест фильтра",
+          "periodic_ventilation": "Периодическая вентиляция"
+        }
+      },
+      "fan_m1_voltage": {
+        "name": "Управляющее напряжение вентилятора M1"
+      },
+      "fan_m2_voltage": {
+        "name": "Управляющее напряжение вентилятора M2"
+      },
+      "heat_pump_demand": {
+        "name": "Запрос к тепловому насосу"
+      },
+      "heat_storage_top": {
+        "name": "Температура в верхней части накопительного бака"
+      },
+      "heat_storage_middle": {
+        "name": "Температура в средней части накопительного бака"
+      }
+    },
+    "binary_sensor": {
+      "fault": {
+        "name": "Авария"
+      },
+      "filter_change_due": {
+        "name": "Замена фильтра"
+      },
+      "filter_clogged": {
+        "name": "Фильтр засорён"
+      },
+      "recuperator_frozen": {
+        "name": "Обмерзание рекуператора"
+      },
+      "recuperator_defrosting": {
+        "name": "Оттаивание рекуператора"
+      },
+      "heat_pump_heating": {
+        "name": "Обогрев тепловым насосом"
+      },
+      "heat_pump_cooling": {
+        "name": "Охлаждение тепловым насосом"
+      },
+      "heat_pump_defrosting": {
+        "name": "Оттаивание теплового насоса"
+      }
+    },
+    "switch": {
+      "weekly_program": {
+        "name": "Недельная программа"
+      },
+      "electric_heater_1": {
+        "name": "Электронагреватель 1 накопительного бака"
+      },
+      "electric_heater_2": {
+        "name": "Электронагреватель 2 накопительного бака"
+      }
+    },
+    "number": {
+      "heat_storage_target_top": {
+        "name": "Заданная температура в верхней части накопительного бака"
+      },
+      "heat_storage_target_middle": {
+        "name": "Заданная температура в средней части накопительного бака"
+      },
+      "season_temperature": {
+        "name": "Температура переключения сезона"
+      },
+      "power": {
+        "name": "Производительность"
+      },
+      "power_step": {
+        "name": "Ступень производительности"
+      }
+    },
+    "button": {
+      "reset_filter_interval": {
+        "name": "Подтвердить замену фильтра"
+      },
+      "reset_alarms": {
+        "name": "Сброс аварий"
+      }
+    }
+  }
+}

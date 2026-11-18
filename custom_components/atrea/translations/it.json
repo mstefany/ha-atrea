@@ -1,0 +1,303 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "description": "Attiva prima Modbus TCP sull'unità: parametro di servizio 3.15.1.",
+        "data": {
+          "host": "Host",
+          "port": "Porta"
+        },
+        "data_description": {
+          "host": "Il nome host o l'indirizzo IP dell'unità.",
+          "port": "La porta Modbus TCP dell'unità."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Impossibile connettersi: {error}",
+      "not_rd5": "Il dispositivo risponde, ma non come un'unità Atrea con regolazione RD5."
+    },
+    "abort": {
+      "already_configured": "Il dispositivo è già configurato"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "description": "L'unità può ricevere la temperatura ambiente e la temperatura esterna da Home Assistant. Serve l'impostazione di servizio corrispondente sull'unità (sorgente della temperatura BMS).",
+        "data": {
+          "indoor_temperature_entity": "Sensore della temperatura ambiente",
+          "outdoor_temperature_entity": "Sensore della temperatura esterna",
+          "climate_sets_season": "L'entità clima può cambiare la stagione"
+        },
+        "data_description": {
+          "climate_sets_season": "Disattivato: l'entità clima si limita ad accendere e spegnere l'unità; cambia la stagione con la selezione «Stagione». Attivato: Riscaldamento, Freddo e Caldo/Freddo impostano la stagione di riscaldamento, la stagione senza riscaldamento e T-ODA, anche su richiesta di un assistente vocale o di un'automazione."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "season_locked": {
+      "message": "L'entità clima non cambia la stagione. Usa la selezione «Stagione» oppure consentilo nelle opzioni dell'integrazione."
+    },
+    "write_failed": {
+      "message": "L'unità non ha accettato la modifica: {error}"
+    }
+  },
+  "entity": {
+    "climate": {
+      "unit": {
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "off": "Spento",
+              "automatic": "Automatico",
+              "ventilation": "Ventilazione",
+              "circulation_with_ventilation": "Ricircolo con ventilazione",
+              "circulation": "Ricircolo",
+              "night_precooling": "Preraffrescamento notturno",
+              "unbalanced": "Ventilazione sbilanciata",
+              "overpressure": "Ventilazione in sovrappressione"
+            }
+          },
+          "fan_mode": {
+            "state": {
+              "ventilation_min": "Ventilazione Min",
+              "ventilation_norm": "Ventilazione Norm",
+              "ventilation_max": "Ventilazione Max",
+              "circulation_min": "Ricircolo Min",
+              "circulation_norm": "Ricircolo Norm",
+              "circulation_max": "Ricircolo Max",
+              "min_min": "Ricircolo Min / ventilazione Min",
+              "min_norm": "Ricircolo Min / ventilazione Norm",
+              "min_max": "Ricircolo Min / ventilazione Max",
+              "norm_min": "Ricircolo Norm / ventilazione Min",
+              "norm_norm": "Ricircolo Norm / ventilazione Norm",
+              "norm_max": "Ricircolo Norm / ventilazione Max",
+              "max_min": "Ricircolo Max / ventilazione Min",
+              "max_norm": "Ricircolo Max / ventilazione Norm",
+              "max_max": "Ricircolo Max / ventilazione Max"
+            }
+          }
+        }
+      }
+    },
+    "select": {
+      "operating_mode": {
+        "name": "Modalità di funzionamento",
+        "state": {
+          "off": "Spento",
+          "automatic": "Automatico",
+          "ventilation": "Ventilazione",
+          "circulation_with_ventilation": "Ricircolo con ventilazione",
+          "circulation": "Ricircolo",
+          "night_precooling": "Preraffrescamento notturno",
+          "unbalanced": "Ventilazione sbilanciata",
+          "overpressure": "Ventilazione in sovrappressione"
+        }
+      },
+      "power_level": {
+        "name": "Potenza",
+        "state": {
+          "ventilation_min": "Ventilazione Min",
+          "ventilation_norm": "Ventilazione Norm",
+          "ventilation_max": "Ventilazione Max",
+          "circulation_min": "Ricircolo Min",
+          "circulation_norm": "Ricircolo Norm",
+          "circulation_max": "Ricircolo Max",
+          "min_min": "Ricircolo Min / ventilazione Min",
+          "min_norm": "Ricircolo Min / ventilazione Norm",
+          "min_max": "Ricircolo Min / ventilazione Max",
+          "norm_min": "Ricircolo Norm / ventilazione Min",
+          "norm_norm": "Ricircolo Norm / ventilazione Norm",
+          "norm_max": "Ricircolo Norm / ventilazione Max",
+          "max_min": "Ricircolo Max / ventilazione Min",
+          "max_norm": "Ricircolo Max / ventilazione Norm",
+          "max_max": "Ricircolo Max / ventilazione Max"
+        }
+      },
+      "season_mode": {
+        "name": "Stagione",
+        "state": {
+          "heating": "Stagione di riscaldamento",
+          "non_heating": "Stagione senza riscaldamento",
+          "t_oda": "Automatica in base alla temperatura esterna",
+          "t_oda_plus": "Automatica in base alla temperatura esterna e agli apporti di calore"
+        }
+      }
+    },
+    "sensor": {
+      "outdoor_air": {
+        "name": "Temperatura dell'aria esterna"
+      },
+      "supply_air": {
+        "name": "Temperatura dell'aria di mandata"
+      },
+      "extract_air": {
+        "name": "Temperatura dell'aria di ripresa"
+      },
+      "exhaust_air": {
+        "name": "Temperatura dell'aria di espulsione"
+      },
+      "indoor_air": {
+        "name": "Temperatura ambiente"
+      },
+      "outdoor_air_average": {
+        "name": "Temperatura media dell'aria esterna"
+      },
+      "supply_flow": {
+        "name": "Portata dell'aria di mandata"
+      },
+      "extract_flow": {
+        "name": "Portata dell'aria di ripresa"
+      },
+      "outdoor_flow": {
+        "name": "Portata dell'aria esterna"
+      },
+      "supply_flow_requested": {
+        "name": "Portata richiesta dell'aria di mandata"
+      },
+      "extract_flow_requested": {
+        "name": "Portata richiesta dell'aria di ripresa"
+      },
+      "outdoor_flow_requested": {
+        "name": "Portata richiesta dell'aria esterna"
+      },
+      "current_phase": {
+        "name": "Fase attuale",
+        "state": {
+          "off": "Spento",
+          "automatic": "Automatico",
+          "ventilation": "Ventilazione",
+          "circulation_with_ventilation": "Ricircolo con ventilazione",
+          "circulation": "Ricircolo",
+          "night_precooling": "Preraffrescamento notturno",
+          "unbalanced": "Ventilazione sbilanciata",
+          "overpressure": "Ventilazione in sovrappressione"
+        }
+      },
+      "season": {
+        "name": "Stagione attuale",
+        "state": {
+          "heating": "Stagione di riscaldamento",
+          "non_heating": "Stagione senza riscaldamento"
+        }
+      },
+      "forced_state": {
+        "name": "Stato forzato",
+        "state": {
+          "none": "Nessuno",
+          "starting": "Avvio",
+          "stopping": "Arresto",
+          "input_d1": "Ingresso D1",
+          "input_d2": "Ingresso D2",
+          "input_d3": "Ingresso D3",
+          "input_d4": "Ingresso D4",
+          "input_in1": "Ingresso IN1",
+          "input_in2": "Ingresso IN2",
+          "input_k1_in1": "Ingresso INk1 del modulo 1",
+          "input_k1_in2": "Ingresso INk2 del modulo 1",
+          "input_k1_in3": "Ingresso INk3 del modulo 1",
+          "input_k1_in4": "Ingresso INk4 del modulo 1",
+          "input_k2_in1": "Ingresso INk1 del modulo 2",
+          "input_k2_in2": "Ingresso INk2 del modulo 2",
+          "input_k2_in3": "Ingresso INk3 del modulo 2",
+          "input_k2_in4": "Ingresso INk4 del modulo 2",
+          "input_k1_tr1": "Ingresso TRk1 del modulo 1",
+          "input_k1_tr2": "Ingresso TRk2 del modulo 1",
+          "input_k1_tr3": "Ingresso TRk3 del modulo 1",
+          "input_k1_tr4": "Ingresso TRk4 del modulo 1",
+          "input_k1_tr5": "Ingresso TRk5 del modulo 1",
+          "input_k2_tr1": "Ingresso TRk1 del modulo 2",
+          "input_k2_tr2": "Ingresso TRk2 del modulo 2",
+          "input_k2_tr3": "Ingresso TRk3 del modulo 2",
+          "input_k2_tr4": "Ingresso TRk4 del modulo 2",
+          "input_k2_tr5": "Ingresso TRk5 del modulo 2",
+          "heat_pump_defrosting": "Sbrinamento della pompa di calore",
+          "preheating": "Preriscaldamento",
+          "learning": "Apprendimento",
+          "heat_pump_defrosting_2": "Sbrinamento della pompa di calore",
+          "filter_test": "Test del filtro",
+          "periodic_ventilation": "Ventilazione periodica"
+        }
+      },
+      "fan_m1_voltage": {
+        "name": "Tensione di comando del ventilatore M1"
+      },
+      "fan_m2_voltage": {
+        "name": "Tensione di comando del ventilatore M2"
+      },
+      "heat_pump_demand": {
+        "name": "Richiesta alla pompa di calore"
+      },
+      "heat_storage_top": {
+        "name": "Temperatura nella parte alta dell'accumulo"
+      },
+      "heat_storage_middle": {
+        "name": "Temperatura nella parte centrale dell'accumulo"
+      }
+    },
+    "binary_sensor": {
+      "fault": {
+        "name": "Guasto"
+      },
+      "filter_change_due": {
+        "name": "Cambio filtro"
+      },
+      "filter_clogged": {
+        "name": "Filtro intasato"
+      },
+      "recuperator_frozen": {
+        "name": "Scambiatore di calore congelato"
+      },
+      "recuperator_defrosting": {
+        "name": "Sbrinamento dello scambiatore di calore"
+      },
+      "heat_pump_heating": {
+        "name": "Pompa di calore in riscaldamento"
+      },
+      "heat_pump_cooling": {
+        "name": "Pompa di calore in raffrescamento"
+      },
+      "heat_pump_defrosting": {
+        "name": "Sbrinamento della pompa di calore"
+      }
+    },
+    "switch": {
+      "weekly_program": {
+        "name": "Programma settimanale"
+      },
+      "electric_heater_1": {
+        "name": "Resistenza elettrica dell'accumulo 1"
+      },
+      "electric_heater_2": {
+        "name": "Resistenza elettrica dell'accumulo 2"
+      }
+    },
+    "number": {
+      "heat_storage_target_top": {
+        "name": "Temperatura impostata nella parte alta dell'accumulo"
+      },
+      "heat_storage_target_middle": {
+        "name": "Temperatura impostata nella parte centrale dell'accumulo"
+      },
+      "season_temperature": {
+        "name": "Temperatura di cambio stagione"
+      },
+      "power": {
+        "name": "Potenza"
+      },
+      "power_step": {
+        "name": "Livello di potenza"
+      }
+    },
+    "button": {
+      "reset_filter_interval": {
+        "name": "Reset intervallo cambio filtro"
+      },
+      "reset_alarms": {
+        "name": "Reset allarmi"
+      }
+    }
+  }
+}

@@ -1,0 +1,303 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "description": "Vispirms iekārtā iespējojiet Modbus TCP: servisa parametrs 3.15.1.",
+        "data": {
+          "host": "Saimniekdators",
+          "port": "Ports"
+        },
+        "data_description": {
+          "host": "Iekārtas saimniekdatora nosaukums vai IP adrese.",
+          "port": "Iekārtas Modbus TCP ports."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Pieslēguma kļūda: {error}",
+      "not_rd5": "Ierīce atbild, bet ne kā Atrea iekārta ar RD5 vadību."
+    },
+    "abort": {
+      "already_configured": "Ierīce jau ir konfigurēta"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "description": "Iekārta var saņemt telpas un āra temperatūru no Home Assistant. Tam iekārtā nepieciešams atbilstošs servisa iestatījums (temperatūras avots BMS).",
+        "data": {
+          "indoor_temperature_entity": "Telpas temperatūras sensors",
+          "outdoor_temperature_entity": "Āra temperatūras sensors",
+          "climate_sets_season": "Klimata vienība var mainīt sezonu"
+        },
+        "data_description": {
+          "climate_sets_season": "Izslēgts: klimata vienība tikai ieslēdz un izslēdz iekārtu; sezonu mainiet ar vienību „Sezona”. Ieslēgts: „Sildīšana”, „Dzesēšana” un „Sildīšana/Dzesēšana” iestata apkures sezonu, režīmu ārpus apkures sezonas un T-ODA, arī tad, ja to pieprasa balss asistents vai automatizācija."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "season_locked": {
+      "message": "Klimata vienība nemaina sezonu. Izmantojiet vienību „Sezona” vai atļaujiet to integrācijas opcijās."
+    },
+    "write_failed": {
+      "message": "Iekārta nepieņēma izmaiņas: {error}"
+    }
+  },
+  "entity": {
+    "climate": {
+      "unit": {
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "off": "Izslēgts",
+              "automatic": "Automātisks",
+              "ventilation": "Ventilācija",
+              "circulation_with_ventilation": "Cirkulācija ar ventilāciju",
+              "circulation": "Cirkulācija",
+              "night_precooling": "Nakts priekšdzesēšana",
+              "unbalanced": "Nelīdzsvarota ventilācija",
+              "overpressure": "Pārspiediena ventilācija"
+            }
+          },
+          "fan_mode": {
+            "state": {
+              "ventilation_min": "Ventilācija Min",
+              "ventilation_norm": "Ventilācija Norm",
+              "ventilation_max": "Ventilācija Max",
+              "circulation_min": "Cirkulācija Min",
+              "circulation_norm": "Cirkulācija Norm",
+              "circulation_max": "Cirkulācija Max",
+              "min_min": "Cirkulācija Min / ventilācija Min",
+              "min_norm": "Cirkulācija Min / ventilācija Norm",
+              "min_max": "Cirkulācija Min / ventilācija Max",
+              "norm_min": "Cirkulācija Norm / ventilācija Min",
+              "norm_norm": "Cirkulācija Norm / ventilācija Norm",
+              "norm_max": "Cirkulācija Norm / ventilācija Max",
+              "max_min": "Cirkulācija Max / ventilācija Min",
+              "max_norm": "Cirkulācija Max / ventilācija Norm",
+              "max_max": "Cirkulācija Max / ventilācija Max"
+            }
+          }
+        }
+      }
+    },
+    "select": {
+      "operating_mode": {
+        "name": "Darba režīms",
+        "state": {
+          "off": "Izslēgts",
+          "automatic": "Automātisks",
+          "ventilation": "Ventilācija",
+          "circulation_with_ventilation": "Cirkulācija ar ventilāciju",
+          "circulation": "Cirkulācija",
+          "night_precooling": "Nakts priekšdzesēšana",
+          "unbalanced": "Nelīdzsvarota ventilācija",
+          "overpressure": "Pārspiediena ventilācija"
+        }
+      },
+      "power_level": {
+        "name": "Jauda",
+        "state": {
+          "ventilation_min": "Ventilācija Min",
+          "ventilation_norm": "Ventilācija Norm",
+          "ventilation_max": "Ventilācija Max",
+          "circulation_min": "Cirkulācija Min",
+          "circulation_norm": "Cirkulācija Norm",
+          "circulation_max": "Cirkulācija Max",
+          "min_min": "Cirkulācija Min / ventilācija Min",
+          "min_norm": "Cirkulācija Min / ventilācija Norm",
+          "min_max": "Cirkulācija Min / ventilācija Max",
+          "norm_min": "Cirkulācija Norm / ventilācija Min",
+          "norm_norm": "Cirkulācija Norm / ventilācija Norm",
+          "norm_max": "Cirkulācija Norm / ventilācija Max",
+          "max_min": "Cirkulācija Max / ventilācija Min",
+          "max_norm": "Cirkulācija Max / ventilācija Norm",
+          "max_max": "Cirkulācija Max / ventilācija Max"
+        }
+      },
+      "season_mode": {
+        "name": "Sezona",
+        "state": {
+          "heating": "Apkures sezona",
+          "non_heating": "Ārpus apkures sezonas",
+          "t_oda": "Automātiski pēc T-ODA",
+          "t_oda_plus": "Automātiski pēc T-ODA+"
+        }
+      }
+    },
+    "sensor": {
+      "outdoor_air": {
+        "name": "Āra gaisa temperatūra"
+      },
+      "supply_air": {
+        "name": "Pieplūdes gaisa temperatūra"
+      },
+      "extract_air": {
+        "name": "Nosūces gaisa temperatūra"
+      },
+      "exhaust_air": {
+        "name": "Izplūdes gaisa temperatūra"
+      },
+      "indoor_air": {
+        "name": "Telpas temperatūra"
+      },
+      "outdoor_air_average": {
+        "name": "Vidējā āra gaisa temperatūra"
+      },
+      "supply_flow": {
+        "name": "Pieplūdes gaisa plūsma"
+      },
+      "extract_flow": {
+        "name": "Nosūces gaisa plūsma"
+      },
+      "outdoor_flow": {
+        "name": "Āra gaisa plūsma"
+      },
+      "supply_flow_requested": {
+        "name": "Pieprasītā pieplūdes gaisa plūsma"
+      },
+      "extract_flow_requested": {
+        "name": "Pieprasītā nosūces gaisa plūsma"
+      },
+      "outdoor_flow_requested": {
+        "name": "Pieprasītā āra gaisa plūsma"
+      },
+      "current_phase": {
+        "name": "Pašreizējā fāze",
+        "state": {
+          "off": "Izslēgts",
+          "automatic": "Automātisks",
+          "ventilation": "Ventilācija",
+          "circulation_with_ventilation": "Cirkulācija ar ventilāciju",
+          "circulation": "Cirkulācija",
+          "night_precooling": "Nakts priekšdzesēšana",
+          "unbalanced": "Nelīdzsvarota ventilācija",
+          "overpressure": "Pārspiediena ventilācija"
+        }
+      },
+      "season": {
+        "name": "Pašreizējā sezona",
+        "state": {
+          "heating": "Apkures sezona",
+          "non_heating": "Ārpus apkures sezonas"
+        }
+      },
+      "forced_state": {
+        "name": "Piespiedu stāvoklis",
+        "state": {
+          "none": "Nav",
+          "starting": "Palaišana",
+          "stopping": "Apturēšana",
+          "input_d1": "Ieeja D1",
+          "input_d2": "Ieeja D2",
+          "input_d3": "Ieeja D3",
+          "input_d4": "Ieeja D4",
+          "input_in1": "Ieeja IN1",
+          "input_in2": "Ieeja IN2",
+          "input_k1_in1": "Moduļa 1 ieeja INk1",
+          "input_k1_in2": "Moduļa 1 ieeja INk2",
+          "input_k1_in3": "Moduļa 1 ieeja INk3",
+          "input_k1_in4": "Moduļa 1 ieeja INk4",
+          "input_k2_in1": "Moduļa 2 ieeja INk1",
+          "input_k2_in2": "Moduļa 2 ieeja INk2",
+          "input_k2_in3": "Moduļa 2 ieeja INk3",
+          "input_k2_in4": "Moduļa 2 ieeja INk4",
+          "input_k1_tr1": "Moduļa 1 ieeja TRk1",
+          "input_k1_tr2": "Moduļa 1 ieeja TRk2",
+          "input_k1_tr3": "Moduļa 1 ieeja TRk3",
+          "input_k1_tr4": "Moduļa 1 ieeja TRk4",
+          "input_k1_tr5": "Moduļa 1 ieeja TRk5",
+          "input_k2_tr1": "Moduļa 2 ieeja TRk1",
+          "input_k2_tr2": "Moduļa 2 ieeja TRk2",
+          "input_k2_tr3": "Moduļa 2 ieeja TRk3",
+          "input_k2_tr4": "Moduļa 2 ieeja TRk4",
+          "input_k2_tr5": "Moduļa 2 ieeja TRk5",
+          "heat_pump_defrosting": "Siltumsūkņa atkausēšana",
+          "preheating": "Priekšsildīšana",
+          "learning": "Mācīšanās",
+          "heat_pump_defrosting_2": "Siltumsūkņa atkausēšana",
+          "filter_test": "Filtra tests",
+          "periodic_ventilation": "Periodiskā ventilācija"
+        }
+      },
+      "fan_m1_voltage": {
+        "name": "Ventilatora M1 vadības spriegums"
+      },
+      "fan_m2_voltage": {
+        "name": "Ventilatora M2 vadības spriegums"
+      },
+      "heat_pump_demand": {
+        "name": "Siltumsūkņa pieprasījums"
+      },
+      "heat_storage_top": {
+        "name": "Akumulācijas tvertnes augšdaļas temperatūra"
+      },
+      "heat_storage_middle": {
+        "name": "Akumulācijas tvertnes vidusdaļas temperatūra"
+      }
+    },
+    "binary_sensor": {
+      "fault": {
+        "name": "Kļūme"
+      },
+      "filter_change_due": {
+        "name": "Filtra maiņa"
+      },
+      "filter_clogged": {
+        "name": "Filtrs aizsērējis"
+      },
+      "recuperator_frozen": {
+        "name": "Rekuperators aizsalis"
+      },
+      "recuperator_defrosting": {
+        "name": "Rekuperatora atkausēšana"
+      },
+      "heat_pump_heating": {
+        "name": "Siltumsūknis silda"
+      },
+      "heat_pump_cooling": {
+        "name": "Siltumsūknis dzesē"
+      },
+      "heat_pump_defrosting": {
+        "name": "Siltumsūkņa atkausēšana"
+      }
+    },
+    "switch": {
+      "weekly_program": {
+        "name": "Nedēļas programma"
+      },
+      "electric_heater_1": {
+        "name": "Akumulācijas tvertnes elektriskais sildītājs 1"
+      },
+      "electric_heater_2": {
+        "name": "Akumulācijas tvertnes elektriskais sildītājs 2"
+      }
+    },
+    "number": {
+      "heat_storage_target_top": {
+        "name": "Akumulācijas tvertnes augšdaļas iestatītā temperatūra"
+      },
+      "heat_storage_target_middle": {
+        "name": "Akumulācijas tvertnes vidusdaļas iestatītā temperatūra"
+      },
+      "season_temperature": {
+        "name": "Sezonas pārslēgšanas temperatūra"
+      },
+      "power": {
+        "name": "Jauda"
+      },
+      "power_step": {
+        "name": "Jaudas pakāpe"
+      }
+    },
+    "button": {
+      "reset_filter_interval": {
+        "name": "Apstiprināt filtra maiņu"
+      },
+      "reset_alarms": {
+        "name": "Atiestatīt trauksmes"
+      }
+    }
+  }
+}

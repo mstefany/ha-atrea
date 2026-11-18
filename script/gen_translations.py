@@ -1,169 +1,149 @@
-"""Write translations/en.json and translations/cs.json from one table.
+"""Write custom_components/atrea/translations/*.json.
 
-Keeping both languages side by side makes a missing translation obvious.
+English is the source and lives in this file. Every other language is a flat
+file script/i18n/<language>.json: one key per text, for example
+"entity.sensor.outdoor_air.name". The lists that several entities share
+(modes, power levels, seasons, forced states) appear once, as "mode.off",
+"power.circulation_min", "season.heating", "forced.none".
+
+The script stops when a language file misses a key, has a key that English
+does not have, or changes a placeholder such as {error}.
+
 Run: python script/gen_translations.py
+     python script/gen_translations.py --check   (compare, write nothing)
 """
 
 from __future__ import annotations
 
 import json
+import re
+import sys
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-OUT = Path(__file__).parent.parent / "custom_components" / "atrea" / "translations"
-
-# Each leaf is (English, Czech).
-MODES = {
-    "off": ("Off", "Vypnuto"),
-    "automatic": ("Automatic", "Automat"),
-    "ventilation": ("Ventilation", "Větrání"),
-    "circulation_with_ventilation": (
-        "Circulation with ventilation",
-        "Cirkulace s větráním",
-    ),
-    "circulation": ("Circulation", "Cirkulace"),
-    "night_precooling": ("Night precooling", "Noční předchlazení"),
-    "unbalanced": ("Unbalanced ventilation", "Rozvážení"),
-    "overpressure": ("Overpressure ventilation", "Přetlakové větrání"),
-}
-LEVELS = {"min": ("Min", "Min"), "norm": ("Norm", "Norm"), "max": ("Max", "Max")}
-POWER = {
-    **{
-        f"ventilation_{k}": (f"Ventilation {en}", f"Větrání {cs}")
-        for k, (en, cs) in LEVELS.items()
-    },
-    **{
-        f"circulation_{k}": (f"Circulation {en}", f"Cirkulace {cs}")
-        for k, (en, cs) in LEVELS.items()
-    },
-    **{
-        f"{c}_{v}": (
-            f"Circulation {LEVELS[c][0]} / ventilation {LEVELS[v][0]}",
-            f"Cirkulace {LEVELS[c][1]} / větrání {LEVELS[v][1]}",
-        )
-        for c in LEVELS
-        for v in LEVELS
-    },
-}
-SEASON_MODES = {
-    "heating": ("Heating season", "Topná sezóna"),
-    "non_heating": ("Non-heating season", "Netopná sezóna"),
-    "t_oda": ("Automatic by outdoor temperature", "Automaticky podle T-ODA"),
-    "t_oda_plus": (
-        "Automatic by outdoor temperature and heat gain",
-        "Automaticky podle T-ODA+",
-    ),
-}
-FORCED = {
-    "none": ("None", "Žádný"),
-    "starting": ("Starting", "Náběh"),
-    "stopping": ("Stopping", "Doběh"),
-    **{f"input_d{n}": (f"Input D{n}", f"Vstup D{n}") for n in range(1, 5)},
-    **{f"input_in{n}": (f"Input IN{n}", f"Vstup IN{n}") for n in range(1, 3)},
-    **{
-        f"input_k{k}_in{n}": (f"Input INk{n} of module {k}", f"Vstup INk{n} modulu {k}")
-        for k in (1, 2)
-        for n in range(1, 5)
-    },
-    **{
-        f"input_k{k}_tr{n}": (f"Input TRk{n} of module {k}", f"Vstup TRk{n} modulu {k}")
-        for k in (1, 2)
-        for n in range(1, 6)
-    },
-    "heat_pump_defrosting": ("Heat pump defrosting", "Odmrazování tepelného čerpadla"),
-    "preheating": ("Preheating", "Předehřátí"),
-    "learning": ("Learning", "Učící režim"),
-    "heat_pump_defrosting_2": (
-        "Heat pump defrosting",
-        "Odmrazování tepelného čerpadla",
-    ),
-    "filter_test": ("Filter test", "Test filtru"),
-    "periodic_ventilation": ("Periodic ventilation", "Periodické větrání"),
-}
+ROOT = Path(__file__).parent.parent
+OUT = ROOT / "custom_components" / "atrea" / "translations"
+I18N = Path(__file__).parent / "i18n"
 
 
-def name(en: str, cs: str, **extra: Any) -> dict[str, Any]:
-    return {"name": (en, cs), **extra}
+@dataclass(frozen=True)
+class Group:
+    """A list of state names that several entities share."""
+
+    name: str
+    texts: dict[str, str]
+
+    def subset(self, *keys: str) -> Group:
+        return Group(self.name, {key: self.texts[key] for key in keys})
+
+
+MODES = Group(
+    "mode",
+    {
+        "off": "Off",
+        "automatic": "Automatic",
+        "ventilation": "Ventilation",
+        "circulation_with_ventilation": "Circulation with ventilation",
+        "circulation": "Circulation",
+        "night_precooling": "Night precooling",
+        "unbalanced": "Unbalanced ventilation",
+        "overpressure": "Overpressure ventilation",
+    },
+)
+LEVELS = {"min": "Min", "norm": "Norm", "max": "Max"}
+POWER = Group(
+    "power",
+    {
+        **{f"ventilation_{k}": f"Ventilation {v}" for k, v in LEVELS.items()},
+        **{f"circulation_{k}": f"Circulation {v}" for k, v in LEVELS.items()},
+        **{
+            f"{c}_{v}": f"Circulation {LEVELS[c]} / ventilation {LEVELS[v]}"
+            for c in LEVELS
+            for v in LEVELS
+        },
+    },
+)
+SEASONS = Group(
+    "season",
+    {
+        "heating": "Heating season",
+        "non_heating": "Non-heating season",
+        "t_oda": "Automatic by outdoor temperature",
+        "t_oda_plus": "Automatic by outdoor temperature and heat gain",
+    },
+)
+FORCED = Group(
+    "forced",
+    {
+        "none": "None",
+        "starting": "Starting",
+        "stopping": "Stopping",
+        **{f"input_d{n}": f"Input D{n}" for n in range(1, 5)},
+        **{f"input_in{n}": f"Input IN{n}" for n in range(1, 3)},
+        **{
+            f"input_k{k}_in{n}": f"Input INk{n} of module {k}"
+            for k in (1, 2)
+            for n in range(1, 5)
+        },
+        **{
+            f"input_k{k}_tr{n}": f"Input TRk{n} of module {k}"
+            for k in (1, 2)
+            for n in range(1, 6)
+        },
+        "heat_pump_defrosting": "Heat pump defrosting",
+        "preheating": "Preheating",
+        "learning": "Learning",
+        "heat_pump_defrosting_2": "Heat pump defrosting",
+        "filter_test": "Filter test",
+        "periodic_ventilation": "Periodic ventilation",
+    },
+)
+GROUPS = (MODES, POWER, SEASONS, FORCED)
+
+
+def name(text: str, **extra: Any) -> dict[str, Any]:
+    return {"name": text, **extra}
 
 
 TREE: dict[str, Any] = {
     "config": {
         "step": {
             "user": {
-                "description": (
-                    "Enable Modbus TCP on the unit first: service parameter 3.15.1.",
-                    "Nejprve na jednotce povolte Modbus TCP: servisní parametr 3.15.1.",
-                ),
-                "data": {"host": ("Host", "Adresa"), "port": ("Port", "Port")},
+                "description": "Enable Modbus TCP on the unit first: service parameter 3.15.1.",
+                "data": {"host": "Host", "port": "Port"},
                 "data_description": {
-                    "host": (
-                        "The hostname or IP address of the unit.",
-                        "Název nebo IP adresa jednotky.",
-                    ),
-                    "port": (
-                        "The Modbus TCP port of the unit.",
-                        "Port Modbus TCP jednotky.",
-                    ),
+                    "host": "The hostname or IP address of the unit.",
+                    "port": "The Modbus TCP port of the unit.",
                 },
             }
         },
         "error": {
-            "cannot_connect": ("Failed to connect: {error}", "Nelze se připojit: {error}"),
-            "not_rd5": (
-                "The device answers, but not like an Atrea unit with RD5 control.",
-                "Zařízení odpovídá, ale ne jako jednotka Atrea s regulací RD5.",
-            ),
+            "cannot_connect": "Failed to connect: {error}",
+            "not_rd5": "The device answers, but not like an Atrea unit with RD5 control.",
         },
-        "abort": {
-            "already_configured": (
-                "Device is already configured",
-                "Zařízení je již nastaveno",
-            )
-        },
+        "abort": {"already_configured": "Device is already configured"},
     },
     "options": {
         "step": {
             "init": {
-                "description": (
-                    "The unit can take the room and the outdoor temperature from Home Assistant. This needs the matching service setting on the unit (temperature source BMS).",
-                    "Jednotka může přebírat vnitřní a venkovní teplotu z Home Assistanta. Na jednotce musí být nastaven odpovídající zdroj teploty (BMS).",
-                ),
+                "description": "The unit can take the room and the outdoor temperature from Home Assistant. This needs the matching service setting on the unit (temperature source BMS).",
                 "data": {
-                    "indoor_temperature_entity": (
-                        "Room temperature sensor",
-                        "Čidlo vnitřní teploty",
-                    ),
-                    "outdoor_temperature_entity": (
-                        "Outdoor temperature sensor",
-                        "Čidlo venkovní teploty",
-                    ),
-                    "climate_sets_season": (
-                        "Climate entity can change the season",
-                        "Klimatizační entita může měnit sezónu",
-                    ),
+                    "indoor_temperature_entity": "Room temperature sensor",
+                    "outdoor_temperature_entity": "Outdoor temperature sensor",
+                    "climate_sets_season": "Climate entity can change the season",
                 },
                 "data_description": {
-                    "climate_sets_season": (
-                        "Off: the climate entity switches the unit on and off only; change the season with the season select. On: heat, cool and heat/cool set the heating season, the non-heating season and T-ODA, also when a voice assistant or an automation asks.",
-                        "Vypnuto: klimatizační entita jednotku jen zapíná a vypíná; sezónu měňte volbou sezóny. Zapnuto: topení, chlazení a automatika nastaví topnou sezónu, netopnou sezónu a T-ODA, i na pokyn hlasového asistenta nebo automatizace.",
-                    ),
+                    "climate_sets_season": "Off: the climate entity switches the unit on and off only; change the season with the season select. On: heat, cool and heat/cool set the heating season, the non-heating season and T-ODA, also when a voice assistant or an automation asks.",
                 },
             }
         }
     },
     "exceptions": {
         "season_locked": {
-            "message": (
-                "The climate entity does not change the season. Use the season select, or allow it in the integration options.",
-                "Klimatizační entita sezónu nemění. Použijte volbu sezóny, nebo to povolte v nastavení integrace.",
-            )
+            "message": "The climate entity does not change the season. Use the season select, or allow it in the integration options."
         },
-        "write_failed": {
-            "message": (
-                "The unit did not accept the change: {error}",
-                "Jednotka změnu nepřijala: {error}",
-            )
-        }
+        "write_failed": {"message": "The unit did not accept the change: {error}"},
     },
     "entity": {
         "climate": {
@@ -175,109 +155,141 @@ TREE: dict[str, Any] = {
             }
         },
         "select": {
-            "operating_mode": name("Operating mode", "Režim", state=MODES),
-            "power_level": name("Power level", "Výkon", state=POWER),
-            "season_mode": name("Season", "Sezóna", state=SEASON_MODES),
+            "operating_mode": name("Operating mode", state=MODES),
+            "power_level": name("Power level", state=POWER),
+            "season_mode": name("Season", state=SEASONS),
         },
         "sensor": {
-            "outdoor_air": name("Outdoor air temperature", "Teplota venkovního vzduchu"),
-            "supply_air": name("Supply air temperature", "Teplota přiváděného vzduchu"),
-            "extract_air": name("Extract air temperature", "Teplota odváděného vzduchu"),
-            "exhaust_air": name("Exhaust air temperature", "Teplota odpadního vzduchu"),
-            "indoor_air": name("Room temperature", "Teplota vnitřního vzduchu"),
-            "outdoor_air_average": name(
-                "Average outdoor air temperature", "Průměrná teplota venkovního vzduchu"
-            ),
-            "supply_flow": name("Supply air flow", "Průtok přiváděného vzduchu"),
-            "extract_flow": name("Extract air flow", "Průtok odváděného vzduchu"),
-            "outdoor_flow": name("Outdoor air flow", "Průtok venkovního vzduchu"),
-            "supply_flow_requested": name(
-                "Requested supply air flow", "Požadovaný průtok přiváděného vzduchu"
-            ),
-            "extract_flow_requested": name(
-                "Requested extract air flow", "Požadovaný průtok odváděného vzduchu"
-            ),
-            "outdoor_flow_requested": name(
-                "Requested outdoor air flow", "Požadovaný průtok venkovního vzduchu"
-            ),
-            "current_phase": name("Current phase", "Aktuální fáze", state=MODES),
+            "outdoor_air": name("Outdoor air temperature"),
+            "supply_air": name("Supply air temperature"),
+            "extract_air": name("Extract air temperature"),
+            "exhaust_air": name("Exhaust air temperature"),
+            "indoor_air": name("Room temperature"),
+            "outdoor_air_average": name("Average outdoor air temperature"),
+            "supply_flow": name("Supply air flow"),
+            "extract_flow": name("Extract air flow"),
+            "outdoor_flow": name("Outdoor air flow"),
+            "supply_flow_requested": name("Requested supply air flow"),
+            "extract_flow_requested": name("Requested extract air flow"),
+            "outdoor_flow_requested": name("Requested outdoor air flow"),
+            "current_phase": name("Current phase", state=MODES),
             "season": name(
-                "Current season",
-                "Aktuální sezóna",
-                state={
-                    "heating": SEASON_MODES["heating"],
-                    "non_heating": SEASON_MODES["non_heating"],
-                },
+                "Current season", state=SEASONS.subset("heating", "non_heating")
             ),
-            "forced_state": name("Forced state", "Vnucený stav", state=FORCED),
-            "fan_m1_voltage": name("Fan M1 control voltage", "Řídicí napětí ventilátoru M1"),
-            "fan_m2_voltage": name("Fan M2 control voltage", "Řídicí napětí ventilátoru M2"),
-            "heat_pump_demand": name("Heat pump demand", "Požadavek na tepelné čerpadlo"),
-            "heat_storage_top": name(
-                "Heat storage top temperature", "Teplota v horní části zásobníku"
-            ),
-            "heat_storage_middle": name(
-                "Heat storage middle temperature", "Teplota ve střední části zásobníku"
-            ),
+            "forced_state": name("Forced state", state=FORCED),
+            "fan_m1_voltage": name("Fan M1 control voltage"),
+            "fan_m2_voltage": name("Fan M2 control voltage"),
+            "heat_pump_demand": name("Heat pump demand"),
+            "heat_storage_top": name("Heat storage top temperature"),
+            "heat_storage_middle": name("Heat storage middle temperature"),
         },
         "binary_sensor": {
-            "fault": name("Fault", "Porucha"),
-            "filter_change_due": name("Filter change", "Výměna filtru"),
-            "filter_clogged": name("Filter clogged", "Zanesený filtr"),
-            "recuperator_frozen": name("Heat exchanger frozen", "Zámraz rekuperátoru"),
-            "recuperator_defrosting": name(
-                "Heat exchanger defrosting", "Odmrazování rekuperátoru"
-            ),
-            "heat_pump_heating": name("Heat pump heating", "Tepelné čerpadlo topí"),
-            "heat_pump_cooling": name("Heat pump cooling", "Tepelné čerpadlo chladí"),
-            "heat_pump_defrosting": name(
-                "Heat pump defrosting", "Odmrazování tepelného čerpadla"
-            ),
+            "fault": name("Fault"),
+            "filter_change_due": name("Filter change"),
+            "filter_clogged": name("Filter clogged"),
+            "recuperator_frozen": name("Heat exchanger frozen"),
+            "recuperator_defrosting": name("Heat exchanger defrosting"),
+            "heat_pump_heating": name("Heat pump heating"),
+            "heat_pump_cooling": name("Heat pump cooling"),
+            "heat_pump_defrosting": name("Heat pump defrosting"),
         },
         "switch": {
-            "weekly_program": name("Weekly program", "Týdenní program"),
-            "electric_heater_1": name(
-                "Heat storage electric heater 1", "Elektrická patrona zásobníku 1"
-            ),
-            "electric_heater_2": name(
-                "Heat storage electric heater 2", "Elektrická patrona zásobníku 2"
-            ),
+            "weekly_program": name("Weekly program"),
+            "electric_heater_1": name("Heat storage electric heater 1"),
+            "electric_heater_2": name("Heat storage electric heater 2"),
         },
         "number": {
-            "heat_storage_target_top": name(
-                "Heat storage top target temperature",
-                "Požadovaná teplota v horní části zásobníku",
-            ),
+            "heat_storage_target_top": name("Heat storage top target temperature"),
             "heat_storage_target_middle": name(
-                "Heat storage middle target temperature",
-                "Požadovaná teplota ve střední části zásobníku",
+                "Heat storage middle target temperature"
             ),
-            "season_temperature": name(
-                "Season changeover temperature", "Teplota přepnutí sezóny"
-            ),
-            "power": name("Power", "Výkon"),
-            "power_step": name("Power level", "Stupeň výkonu"),
+            "season_temperature": name("Season changeover temperature"),
+            "power": name("Power"),
+            "power_step": name("Power level"),
         },
         "button": {
-            "reset_filter_interval": name(
-                "Reset filter change interval", "Potvrdit výměnu filtru"
-            ),
-            "reset_alarms": name("Reset alarms", "Reset poruch"),
+            "reset_filter_interval": name("Reset filter change interval"),
+            "reset_alarms": name("Reset alarms"),
         },
     },
 }
 
 
-def pick(node: Any, index: int) -> Any:
-    if isinstance(node, tuple):
-        return node[index]
-    return {key: pick(value, index) for key, value in node.items()}
+def english() -> dict[str, str]:
+    """Every English text by its flat key."""
+    texts: dict[str, str] = {}
+    for group in GROUPS:
+        texts.update({f"{group.name}.{key}": text for key, text in group.texts.items()})
+
+    def walk(node: Any, path: str) -> None:
+        if isinstance(node, str):
+            texts[path] = node
+        elif isinstance(node, dict):
+            for key, value in node.items():
+                walk(value, f"{path}.{key}" if path else key)
+
+    walk(TREE, "")
+    return texts
 
 
-for index, language in enumerate(("en", "cs")):
-    OUT.mkdir(parents=True, exist_ok=True)
-    (OUT / f"{language}.json").write_text(
-        json.dumps(pick(TREE, index), indent=2, ensure_ascii=False) + "\n",
-        encoding="utf-8",
-        newline="\n",
-    )
+def render(node: Any, texts: dict[str, str], path: str = "") -> Any:
+    if isinstance(node, Group):
+        return {key: texts[f"{node.name}.{key}"] for key in node.texts}
+    if isinstance(node, str):
+        return texts[path]
+    return {
+        key: render(value, texts, f"{path}.{key}" if path else key)
+        for key, value in node.items()
+    }
+
+
+PLACEHOLDER = re.compile(r"\{[a-z_]+\}")
+
+
+def problems(language: str, texts: dict[str, str], source: dict[str, str]) -> list[str]:
+    found = [f"{language}: missing {key}" for key in source if key not in texts]
+    found += [f"{language}: unknown {key}" for key in texts if key not in source]
+    for key, text in texts.items():
+        if key not in source:
+            continue
+        if sorted(PLACEHOLDER.findall(text)) != sorted(
+            PLACEHOLDER.findall(source[key])
+        ):
+            found.append(f"{language}: placeholders differ in {key}")
+        if not text.strip() or text != text.strip():
+            found.append(f"{language}: empty text or spaces at the ends in {key}")
+    return found
+
+
+def main() -> int:
+    check = "--check" in sys.argv
+    source = english()
+    outputs = {"en": render(TREE, source)}
+    errors: list[str] = []
+    for path in sorted(I18N.glob("*.json")):
+        texts = json.loads(path.read_text(encoding="utf-8"))
+        errors += problems(path.stem, texts, source)
+        if not errors:
+            outputs[path.stem] = render(TREE, texts)
+    if errors:
+        print("\n".join(errors))
+        return 1
+    stale = []
+    for language, tree in outputs.items():
+        target = OUT / f"{language}.json"
+        content = json.dumps(tree, indent=2, ensure_ascii=False) + "\n"
+        if check:
+            if not target.exists() or target.read_text(encoding="utf-8") != content:
+                stale.append(target.name)
+            continue
+        OUT.mkdir(parents=True, exist_ok=True)
+        target.write_text(content, encoding="utf-8", newline="\n")
+    if stale:
+        print("Out of date, run python script/gen_translations.py:", ", ".join(stale))
+        return 1
+    print(f"{len(outputs)} languages, {len(source)} texts each")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

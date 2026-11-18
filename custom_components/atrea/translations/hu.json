@@ -1,0 +1,303 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "description": "Először engedélyezze a Modbus TCP-t az egységen: 3.15.1 szervizparaméter.",
+        "data": {
+          "host": "Hoszt",
+          "port": "Port"
+        },
+        "data_description": {
+          "host": "Az egység hosztneve vagy IP-címe.",
+          "port": "Az egység Modbus TCP portja."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Sikertelen csatlakozás: {error}",
+      "not_rd5": "Az eszköz válaszol, de nem úgy, mint egy RD5 vezérlésű Atrea egység."
+    },
+    "abort": {
+      "already_configured": "Az eszköz már konfigurálva van"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "description": "Az egység a helyiséghőmérsékletet és a külső hőmérsékletet a Home Assistantból is átveheti. Ehhez az egységen a megfelelő szervizbeállítás szükséges (hőmérsékletforrás: BMS).",
+        "data": {
+          "indoor_temperature_entity": "Helyiséghőmérséklet-érzékelő",
+          "outdoor_temperature_entity": "Külső hőmérséklet-érzékelő",
+          "climate_sets_season": "A klíma entitás módosíthatja az időszakot"
+        },
+        "data_description": {
+          "climate_sets_season": "Ki: a klíma entitás csak be- és kikapcsolja az egységet; az időszakot az „Időszak” választóval módosítsa. Be: a Fűtés, a Hűtés és a Fűtés/Hűtés a fűtési időszakot, a nem fűtési időszakot, illetve a T-ODA-t állítja be, akkor is, ha egy hangasszisztens vagy automatizálás kéri."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "season_locked": {
+      "message": "A klíma entitás nem módosítja az időszakot. Használja az „Időszak” választót, vagy engedélyezze ezt az integráció beállításaiban."
+    },
+    "write_failed": {
+      "message": "Az egység nem fogadta el a módosítást: {error}"
+    }
+  },
+  "entity": {
+    "climate": {
+      "unit": {
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "off": "Ki",
+              "automatic": "Automatikus",
+              "ventilation": "Szellőztetés",
+              "circulation_with_ventilation": "Keringetés szellőztetéssel",
+              "circulation": "Keringetés",
+              "night_precooling": "Éjszakai előhűtés",
+              "unbalanced": "Kiegyenlítetlen szellőztetés",
+              "overpressure": "Túlnyomásos szellőztetés"
+            }
+          },
+          "fan_mode": {
+            "state": {
+              "ventilation_min": "Szellőztetés Min",
+              "ventilation_norm": "Szellőztetés Norm",
+              "ventilation_max": "Szellőztetés Max",
+              "circulation_min": "Keringetés Min",
+              "circulation_norm": "Keringetés Norm",
+              "circulation_max": "Keringetés Max",
+              "min_min": "Keringetés Min / szellőztetés Min",
+              "min_norm": "Keringetés Min / szellőztetés Norm",
+              "min_max": "Keringetés Min / szellőztetés Max",
+              "norm_min": "Keringetés Norm / szellőztetés Min",
+              "norm_norm": "Keringetés Norm / szellőztetés Norm",
+              "norm_max": "Keringetés Norm / szellőztetés Max",
+              "max_min": "Keringetés Max / szellőztetés Min",
+              "max_norm": "Keringetés Max / szellőztetés Norm",
+              "max_max": "Keringetés Max / szellőztetés Max"
+            }
+          }
+        }
+      }
+    },
+    "select": {
+      "operating_mode": {
+        "name": "Üzemmód",
+        "state": {
+          "off": "Ki",
+          "automatic": "Automatikus",
+          "ventilation": "Szellőztetés",
+          "circulation_with_ventilation": "Keringetés szellőztetéssel",
+          "circulation": "Keringetés",
+          "night_precooling": "Éjszakai előhűtés",
+          "unbalanced": "Kiegyenlítetlen szellőztetés",
+          "overpressure": "Túlnyomásos szellőztetés"
+        }
+      },
+      "power_level": {
+        "name": "Teljesítmény",
+        "state": {
+          "ventilation_min": "Szellőztetés Min",
+          "ventilation_norm": "Szellőztetés Norm",
+          "ventilation_max": "Szellőztetés Max",
+          "circulation_min": "Keringetés Min",
+          "circulation_norm": "Keringetés Norm",
+          "circulation_max": "Keringetés Max",
+          "min_min": "Keringetés Min / szellőztetés Min",
+          "min_norm": "Keringetés Min / szellőztetés Norm",
+          "min_max": "Keringetés Min / szellőztetés Max",
+          "norm_min": "Keringetés Norm / szellőztetés Min",
+          "norm_norm": "Keringetés Norm / szellőztetés Norm",
+          "norm_max": "Keringetés Norm / szellőztetés Max",
+          "max_min": "Keringetés Max / szellőztetés Min",
+          "max_norm": "Keringetés Max / szellőztetés Norm",
+          "max_max": "Keringetés Max / szellőztetés Max"
+        }
+      },
+      "season_mode": {
+        "name": "Időszak",
+        "state": {
+          "heating": "Fűtési időszak",
+          "non_heating": "Nem fűtési időszak",
+          "t_oda": "Automatikus T-ODA szerint",
+          "t_oda_plus": "Automatikus T-ODA+ szerint"
+        }
+      }
+    },
+    "sensor": {
+      "outdoor_air": {
+        "name": "Külső levegő hőmérséklete"
+      },
+      "supply_air": {
+        "name": "Táplevegő hőmérséklete"
+      },
+      "extract_air": {
+        "name": "Elszívott levegő hőmérséklete"
+      },
+      "exhaust_air": {
+        "name": "Kidobott levegő hőmérséklete"
+      },
+      "indoor_air": {
+        "name": "Helyiséghőmérséklet"
+      },
+      "outdoor_air_average": {
+        "name": "Külső levegő átlaghőmérséklete"
+      },
+      "supply_flow": {
+        "name": "Táplevegő térfogatárama"
+      },
+      "extract_flow": {
+        "name": "Elszívott levegő térfogatárama"
+      },
+      "outdoor_flow": {
+        "name": "Külső levegő térfogatárama"
+      },
+      "supply_flow_requested": {
+        "name": "Táplevegő kért térfogatárama"
+      },
+      "extract_flow_requested": {
+        "name": "Elszívott levegő kért térfogatárama"
+      },
+      "outdoor_flow_requested": {
+        "name": "Külső levegő kért térfogatárama"
+      },
+      "current_phase": {
+        "name": "Aktuális fázis",
+        "state": {
+          "off": "Ki",
+          "automatic": "Automatikus",
+          "ventilation": "Szellőztetés",
+          "circulation_with_ventilation": "Keringetés szellőztetéssel",
+          "circulation": "Keringetés",
+          "night_precooling": "Éjszakai előhűtés",
+          "unbalanced": "Kiegyenlítetlen szellőztetés",
+          "overpressure": "Túlnyomásos szellőztetés"
+        }
+      },
+      "season": {
+        "name": "Aktuális időszak",
+        "state": {
+          "heating": "Fűtési időszak",
+          "non_heating": "Nem fűtési időszak"
+        }
+      },
+      "forced_state": {
+        "name": "Kényszerállapot",
+        "state": {
+          "none": "Nincs",
+          "starting": "Beindítás",
+          "stopping": "Kifutás",
+          "input_d1": "D1 bemenet",
+          "input_d2": "D2 bemenet",
+          "input_d3": "D3 bemenet",
+          "input_d4": "D4 bemenet",
+          "input_in1": "IN1 bemenet",
+          "input_in2": "IN2 bemenet",
+          "input_k1_in1": "1. modul INk1 bemenete",
+          "input_k1_in2": "1. modul INk2 bemenete",
+          "input_k1_in3": "1. modul INk3 bemenete",
+          "input_k1_in4": "1. modul INk4 bemenete",
+          "input_k2_in1": "2. modul INk1 bemenete",
+          "input_k2_in2": "2. modul INk2 bemenete",
+          "input_k2_in3": "2. modul INk3 bemenete",
+          "input_k2_in4": "2. modul INk4 bemenete",
+          "input_k1_tr1": "1. modul TRk1 bemenete",
+          "input_k1_tr2": "1. modul TRk2 bemenete",
+          "input_k1_tr3": "1. modul TRk3 bemenete",
+          "input_k1_tr4": "1. modul TRk4 bemenete",
+          "input_k1_tr5": "1. modul TRk5 bemenete",
+          "input_k2_tr1": "2. modul TRk1 bemenete",
+          "input_k2_tr2": "2. modul TRk2 bemenete",
+          "input_k2_tr3": "2. modul TRk3 bemenete",
+          "input_k2_tr4": "2. modul TRk4 bemenete",
+          "input_k2_tr5": "2. modul TRk5 bemenete",
+          "heat_pump_defrosting": "Hőszivattyú leolvasztása",
+          "preheating": "Előmelegítés",
+          "learning": "Tanulás",
+          "heat_pump_defrosting_2": "Hőszivattyú leolvasztása",
+          "filter_test": "Szűrőteszt",
+          "periodic_ventilation": "Időszakos szellőztetés"
+        }
+      },
+      "fan_m1_voltage": {
+        "name": "M1 ventilátor vezérlőfeszültsége"
+      },
+      "fan_m2_voltage": {
+        "name": "M2 ventilátor vezérlőfeszültsége"
+      },
+      "heat_pump_demand": {
+        "name": "Hőszivattyú-igény"
+      },
+      "heat_storage_top": {
+        "name": "Tároló felső hőmérséklete"
+      },
+      "heat_storage_middle": {
+        "name": "Tároló középső hőmérséklete"
+      }
+    },
+    "binary_sensor": {
+      "fault": {
+        "name": "Hiba"
+      },
+      "filter_change_due": {
+        "name": "Szűrőcsere"
+      },
+      "filter_clogged": {
+        "name": "Eltömődött szűrő"
+      },
+      "recuperator_frozen": {
+        "name": "Befagyott hőcserélő"
+      },
+      "recuperator_defrosting": {
+        "name": "Hőcserélő leolvasztása"
+      },
+      "heat_pump_heating": {
+        "name": "Hőszivattyú fűt"
+      },
+      "heat_pump_cooling": {
+        "name": "Hőszivattyú hűt"
+      },
+      "heat_pump_defrosting": {
+        "name": "Hőszivattyú leolvasztása"
+      }
+    },
+    "switch": {
+      "weekly_program": {
+        "name": "Heti program"
+      },
+      "electric_heater_1": {
+        "name": "Tároló 1. elektromos fűtőbetétje"
+      },
+      "electric_heater_2": {
+        "name": "Tároló 2. elektromos fűtőbetétje"
+      }
+    },
+    "number": {
+      "heat_storage_target_top": {
+        "name": "Tároló felső célhőmérséklete"
+      },
+      "heat_storage_target_middle": {
+        "name": "Tároló középső célhőmérséklete"
+      },
+      "season_temperature": {
+        "name": "Időszakváltási hőmérséklet"
+      },
+      "power": {
+        "name": "Teljesítmény"
+      },
+      "power_step": {
+        "name": "Teljesítményfokozat"
+      }
+    },
+    "button": {
+      "reset_filter_interval": {
+        "name": "Szűrőcsere nyugtázása"
+      },
+      "reset_alarms": {
+        "name": "Riasztások visszaállítása"
+      }
+    }
+  }
+}

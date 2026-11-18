@@ -4,7 +4,7 @@
       "user": {
         "description": "Nejprve na jednotce povolte Modbus TCP: servisní parametr 3.15.1.",
         "data": {
-          "host": "Adresa",
+          "host": "Hostitel",
           "port": "Port"
         },
         "data_description": {
@@ -14,7 +14,7 @@
       }
     },
     "error": {
-      "cannot_connect": "Nelze se připojit: {error}",
+      "cannot_connect": "Nepodařilo se připojit: {error}",
       "not_rd5": "Zařízení odpovídá, ale ne jako jednotka Atrea s regulací RD5."
     },
     "abort": {
@@ -31,7 +31,7 @@
           "climate_sets_season": "Klimatizační entita může měnit sezónu"
         },
         "data_description": {
-          "climate_sets_season": "Vypnuto: klimatizační entita jednotku jen zapíná a vypíná; sezónu měňte volbou sezóny. Zapnuto: topení, chlazení a automatika nastaví topnou sezónu, netopnou sezónu a T-ODA, i na pokyn hlasového asistenta nebo automatizace."
+          "climate_sets_season": "Vypnuto: klimatizační entita jednotku jen zapíná a vypíná; sezónu měňte volbou sezóny. Zapnuto: Vytápění, Chlazení a Vytápění/Chlazení nastaví topnou sezónu, netopnou sezónu a T-ODA, i na pokyn hlasového asistenta nebo automatizace."
         }
       }
     }

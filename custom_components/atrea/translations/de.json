@@ -1,0 +1,303 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "description": "Aktiviere zuerst Modbus TCP am Gerät: Serviceparameter 3.15.1.",
+        "data": {
+          "host": "Host",
+          "port": "Port"
+        },
+        "data_description": {
+          "host": "Der Hostname oder die IP-Adresse des Geräts.",
+          "port": "Der Modbus-TCP-Port des Geräts."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Verbindung fehlgeschlagen: {error}",
+      "not_rd5": "Das Gerät antwortet, aber nicht wie ein Atrea-Gerät mit RD5-Regelung."
+    },
+    "abort": {
+      "already_configured": "Gerät ist bereits konfiguriert"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "description": "Das Gerät kann die Raumtemperatur und die Außentemperatur aus Home Assistant übernehmen. Dafür muss am Gerät die passende Serviceeinstellung gesetzt sein (Temperaturquelle BMS).",
+        "data": {
+          "indoor_temperature_entity": "Raumtemperatursensor",
+          "outdoor_temperature_entity": "Außentemperatursensor",
+          "climate_sets_season": "Klima-Entität darf die Saison ändern"
+        },
+        "data_description": {
+          "climate_sets_season": "Aus: Die Klima-Entität schaltet das Gerät nur ein und aus; die Saison änderst du mit der Auswahl „Saison“. Ein: Heizbetrieb, Kühlbetrieb und Heizen/Kühlen stellen die Heizsaison, die Nichtheizsaison und T-ODA ein, auch wenn ein Sprachassistent oder eine Automatisierung dies anfordert."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "season_locked": {
+      "message": "Die Klima-Entität ändert die Saison nicht. Verwende die Auswahl „Saison“ oder erlaube es in den Optionen der Integration."
+    },
+    "write_failed": {
+      "message": "Das Gerät hat die Änderung nicht angenommen: {error}"
+    }
+  },
+  "entity": {
+    "climate": {
+      "unit": {
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "off": "Aus",
+              "automatic": "Automatik",
+              "ventilation": "Lüftung",
+              "circulation_with_ventilation": "Umluft mit Lüftung",
+              "circulation": "Umluft",
+              "night_precooling": "Nachtkühlung",
+              "unbalanced": "Unausgeglichene Lüftung",
+              "overpressure": "Überdrucklüftung"
+            }
+          },
+          "fan_mode": {
+            "state": {
+              "ventilation_min": "Lüftung Min",
+              "ventilation_norm": "Lüftung Norm",
+              "ventilation_max": "Lüftung Max",
+              "circulation_min": "Umluft Min",
+              "circulation_norm": "Umluft Norm",
+              "circulation_max": "Umluft Max",
+              "min_min": "Umluft Min / Lüftung Min",
+              "min_norm": "Umluft Min / Lüftung Norm",
+              "min_max": "Umluft Min / Lüftung Max",
+              "norm_min": "Umluft Norm / Lüftung Min",
+              "norm_norm": "Umluft Norm / Lüftung Norm",
+              "norm_max": "Umluft Norm / Lüftung Max",
+              "max_min": "Umluft Max / Lüftung Min",
+              "max_norm": "Umluft Max / Lüftung Norm",
+              "max_max": "Umluft Max / Lüftung Max"
+            }
+          }
+        }
+      }
+    },
+    "select": {
+      "operating_mode": {
+        "name": "Betriebsart",
+        "state": {
+          "off": "Aus",
+          "automatic": "Automatik",
+          "ventilation": "Lüftung",
+          "circulation_with_ventilation": "Umluft mit Lüftung",
+          "circulation": "Umluft",
+          "night_precooling": "Nachtkühlung",
+          "unbalanced": "Unausgeglichene Lüftung",
+          "overpressure": "Überdrucklüftung"
+        }
+      },
+      "power_level": {
+        "name": "Luftleistung",
+        "state": {
+          "ventilation_min": "Lüftung Min",
+          "ventilation_norm": "Lüftung Norm",
+          "ventilation_max": "Lüftung Max",
+          "circulation_min": "Umluft Min",
+          "circulation_norm": "Umluft Norm",
+          "circulation_max": "Umluft Max",
+          "min_min": "Umluft Min / Lüftung Min",
+          "min_norm": "Umluft Min / Lüftung Norm",
+          "min_max": "Umluft Min / Lüftung Max",
+          "norm_min": "Umluft Norm / Lüftung Min",
+          "norm_norm": "Umluft Norm / Lüftung Norm",
+          "norm_max": "Umluft Norm / Lüftung Max",
+          "max_min": "Umluft Max / Lüftung Min",
+          "max_norm": "Umluft Max / Lüftung Norm",
+          "max_max": "Umluft Max / Lüftung Max"
+        }
+      },
+      "season_mode": {
+        "name": "Saison",
+        "state": {
+          "heating": "Heizsaison",
+          "non_heating": "Nichtheizsaison",
+          "t_oda": "Automatisch nach Außentemperatur",
+          "t_oda_plus": "Automatisch nach Außentemperatur und Wärmegewinn"
+        }
+      }
+    },
+    "sensor": {
+      "outdoor_air": {
+        "name": "Außenlufttemperatur"
+      },
+      "supply_air": {
+        "name": "Zulufttemperatur"
+      },
+      "extract_air": {
+        "name": "Ablufttemperatur"
+      },
+      "exhaust_air": {
+        "name": "Fortlufttemperatur"
+      },
+      "indoor_air": {
+        "name": "Raumtemperatur"
+      },
+      "outdoor_air_average": {
+        "name": "Durchschnittliche Außenlufttemperatur"
+      },
+      "supply_flow": {
+        "name": "Zuluftvolumenstrom"
+      },
+      "extract_flow": {
+        "name": "Abluftvolumenstrom"
+      },
+      "outdoor_flow": {
+        "name": "Außenluftvolumenstrom"
+      },
+      "supply_flow_requested": {
+        "name": "Angeforderter Zuluftvolumenstrom"
+      },
+      "extract_flow_requested": {
+        "name": "Angeforderter Abluftvolumenstrom"
+      },
+      "outdoor_flow_requested": {
+        "name": "Angeforderter Außenluftvolumenstrom"
+      },
+      "current_phase": {
+        "name": "Aktuelle Phase",
+        "state": {
+          "off": "Aus",
+          "automatic": "Automatik",
+          "ventilation": "Lüftung",
+          "circulation_with_ventilation": "Umluft mit Lüftung",
+          "circulation": "Umluft",
+          "night_precooling": "Nachtkühlung",
+          "unbalanced": "Unausgeglichene Lüftung",
+          "overpressure": "Überdrucklüftung"
+        }
+      },
+      "season": {
+        "name": "Aktuelle Saison",
+        "state": {
+          "heating": "Heizsaison",
+          "non_heating": "Nichtheizsaison"
+        }
+      },
+      "forced_state": {
+        "name": "Zwangszustand",
+        "state": {
+          "none": "Keiner",
+          "starting": "Anlauf",
+          "stopping": "Auslauf",
+          "input_d1": "Eingang D1",
+          "input_d2": "Eingang D2",
+          "input_d3": "Eingang D3",
+          "input_d4": "Eingang D4",
+          "input_in1": "Eingang IN1",
+          "input_in2": "Eingang IN2",
+          "input_k1_in1": "Eingang INk1 von Modul 1",
+          "input_k1_in2": "Eingang INk2 von Modul 1",
+          "input_k1_in3": "Eingang INk3 von Modul 1",
+          "input_k1_in4": "Eingang INk4 von Modul 1",
+          "input_k2_in1": "Eingang INk1 von Modul 2",
+          "input_k2_in2": "Eingang INk2 von Modul 2",
+          "input_k2_in3": "Eingang INk3 von Modul 2",
+          "input_k2_in4": "Eingang INk4 von Modul 2",
+          "input_k1_tr1": "Eingang TRk1 von Modul 1",
+          "input_k1_tr2": "Eingang TRk2 von Modul 1",
+          "input_k1_tr3": "Eingang TRk3 von Modul 1",
+          "input_k1_tr4": "Eingang TRk4 von Modul 1",
+          "input_k1_tr5": "Eingang TRk5 von Modul 1",
+          "input_k2_tr1": "Eingang TRk1 von Modul 2",
+          "input_k2_tr2": "Eingang TRk2 von Modul 2",
+          "input_k2_tr3": "Eingang TRk3 von Modul 2",
+          "input_k2_tr4": "Eingang TRk4 von Modul 2",
+          "input_k2_tr5": "Eingang TRk5 von Modul 2",
+          "heat_pump_defrosting": "Abtauen der Wärmepumpe",
+          "preheating": "Vorwärmen",
+          "learning": "Lernen",
+          "heat_pump_defrosting_2": "Abtauen der Wärmepumpe",
+          "filter_test": "Filtertest",
+          "periodic_ventilation": "Periodische Lüftung"
+        }
+      },
+      "fan_m1_voltage": {
+        "name": "Steuerspannung Ventilator M1"
+      },
+      "fan_m2_voltage": {
+        "name": "Steuerspannung Ventilator M2"
+      },
+      "heat_pump_demand": {
+        "name": "Anforderung an die Wärmepumpe"
+      },
+      "heat_storage_top": {
+        "name": "Speichertemperatur oben"
+      },
+      "heat_storage_middle": {
+        "name": "Speichertemperatur Mitte"
+      }
+    },
+    "binary_sensor": {
+      "fault": {
+        "name": "Störung"
+      },
+      "filter_change_due": {
+        "name": "Filtertausch"
+      },
+      "filter_clogged": {
+        "name": "Filter verschmutzt"
+      },
+      "recuperator_frozen": {
+        "name": "Wärmetauscher vereist"
+      },
+      "recuperator_defrosting": {
+        "name": "Abtauen des Wärmetauschers"
+      },
+      "heat_pump_heating": {
+        "name": "Wärmepumpe heizt"
+      },
+      "heat_pump_cooling": {
+        "name": "Wärmepumpe kühlt"
+      },
+      "heat_pump_defrosting": {
+        "name": "Abtauen der Wärmepumpe"
+      }
+    },
+    "switch": {
+      "weekly_program": {
+        "name": "Wochenprogramm"
+      },
+      "electric_heater_1": {
+        "name": "Speicher-Heizstab 1"
+      },
+      "electric_heater_2": {
+        "name": "Speicher-Heizstab 2"
+      }
+    },
+    "number": {
+      "heat_storage_target_top": {
+        "name": "Speicher-Solltemperatur oben"
+      },
+      "heat_storage_target_middle": {
+        "name": "Speicher-Solltemperatur Mitte"
+      },
+      "season_temperature": {
+        "name": "Umschalttemperatur der Saison"
+      },
+      "power": {
+        "name": "Luftleistung"
+      },
+      "power_step": {
+        "name": "Leistungsstufe"
+      }
+    },
+    "button": {
+      "reset_filter_interval": {
+        "name": "Filtertauschintervall zurücksetzen"
+      },
+      "reset_alarms": {
+        "name": "Alarme zurücksetzen"
+      }
+    }
+  }
+}

@@ -1,0 +1,303 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "description": "Najprije na jedinici omogućite Modbus TCP: servisni parametar 3.15.1.",
+        "data": {
+          "host": "Host",
+          "port": "Port"
+        },
+        "data_description": {
+          "host": "Naziv hosta ili IP adresa jedinice.",
+          "port": "Modbus TCP port jedinice."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Povezivanje nije uspjelo: {error}",
+      "not_rd5": "Uređaj odgovara, ali ne kao jedinica Atrea s regulacijom RD5."
+    },
+    "abort": {
+      "already_configured": "Uređaj je već konfiguriran"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "description": "Jedinica može preuzimati sobnu i vanjsku temperaturu iz Home Assistanta. Za to je na jedinici potrebna odgovarajuća servisna postavka (izvor temperature BMS).",
+        "data": {
+          "indoor_temperature_entity": "Senzor sobne temperature",
+          "outdoor_temperature_entity": "Senzor vanjske temperature",
+          "climate_sets_season": "Entitet klime može mijenjati sezonu"
+        },
+        "data_description": {
+          "climate_sets_season": "Isključeno: entitet klime samo uključuje i isključuje jedinicu; sezonu mijenjajte odabirom „Sezona”. Uključeno: Grijanje, Hlađenje i Grijanje/hlađenje postavljaju sezonu grijanja, sezonu bez grijanja i T-ODA, i kada to zatraži glasovni asistent ili automatizacija."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "season_locked": {
+      "message": "Entitet klime ne mijenja sezonu. Koristite odabir „Sezona” ili to dopustite u opcijama integracije."
+    },
+    "write_failed": {
+      "message": "Jedinica nije prihvatila promjenu: {error}"
+    }
+  },
+  "entity": {
+    "climate": {
+      "unit": {
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "off": "Isključeno",
+              "automatic": "Automatski",
+              "ventilation": "Ventilacija",
+              "circulation_with_ventilation": "Cirkulacija s ventilacijom",
+              "circulation": "Cirkulacija",
+              "night_precooling": "Noćno prethlađivanje",
+              "unbalanced": "Neuravnotežena ventilacija",
+              "overpressure": "Pretlačna ventilacija"
+            }
+          },
+          "fan_mode": {
+            "state": {
+              "ventilation_min": "Ventilacija Min",
+              "ventilation_norm": "Ventilacija Norm",
+              "ventilation_max": "Ventilacija Max",
+              "circulation_min": "Cirkulacija Min",
+              "circulation_norm": "Cirkulacija Norm",
+              "circulation_max": "Cirkulacija Max",
+              "min_min": "Cirkulacija Min / ventilacija Min",
+              "min_norm": "Cirkulacija Min / ventilacija Norm",
+              "min_max": "Cirkulacija Min / ventilacija Max",
+              "norm_min": "Cirkulacija Norm / ventilacija Min",
+              "norm_norm": "Cirkulacija Norm / ventilacija Norm",
+              "norm_max": "Cirkulacija Norm / ventilacija Max",
+              "max_min": "Cirkulacija Max / ventilacija Min",
+              "max_norm": "Cirkulacija Max / ventilacija Norm",
+              "max_max": "Cirkulacija Max / ventilacija Max"
+            }
+          }
+        }
+      }
+    },
+    "select": {
+      "operating_mode": {
+        "name": "Način rada",
+        "state": {
+          "off": "Isključeno",
+          "automatic": "Automatski",
+          "ventilation": "Ventilacija",
+          "circulation_with_ventilation": "Cirkulacija s ventilacijom",
+          "circulation": "Cirkulacija",
+          "night_precooling": "Noćno prethlađivanje",
+          "unbalanced": "Neuravnotežena ventilacija",
+          "overpressure": "Pretlačna ventilacija"
+        }
+      },
+      "power_level": {
+        "name": "Snaga",
+        "state": {
+          "ventilation_min": "Ventilacija Min",
+          "ventilation_norm": "Ventilacija Norm",
+          "ventilation_max": "Ventilacija Max",
+          "circulation_min": "Cirkulacija Min",
+          "circulation_norm": "Cirkulacija Norm",
+          "circulation_max": "Cirkulacija Max",
+          "min_min": "Cirkulacija Min / ventilacija Min",
+          "min_norm": "Cirkulacija Min / ventilacija Norm",
+          "min_max": "Cirkulacija Min / ventilacija Max",
+          "norm_min": "Cirkulacija Norm / ventilacija Min",
+          "norm_norm": "Cirkulacija Norm / ventilacija Norm",
+          "norm_max": "Cirkulacija Norm / ventilacija Max",
+          "max_min": "Cirkulacija Max / ventilacija Min",
+          "max_norm": "Cirkulacija Max / ventilacija Norm",
+          "max_max": "Cirkulacija Max / ventilacija Max"
+        }
+      },
+      "season_mode": {
+        "name": "Sezona",
+        "state": {
+          "heating": "Sezona grijanja",
+          "non_heating": "Sezona bez grijanja",
+          "t_oda": "Automatski prema T-ODA",
+          "t_oda_plus": "Automatski prema T-ODA+"
+        }
+      }
+    },
+    "sensor": {
+      "outdoor_air": {
+        "name": "Temperatura vanjskog zraka"
+      },
+      "supply_air": {
+        "name": "Temperatura dovodnog zraka"
+      },
+      "extract_air": {
+        "name": "Temperatura odsisnog zraka"
+      },
+      "exhaust_air": {
+        "name": "Temperatura otpadnog zraka"
+      },
+      "indoor_air": {
+        "name": "Sobna temperatura"
+      },
+      "outdoor_air_average": {
+        "name": "Prosječna temperatura vanjskog zraka"
+      },
+      "supply_flow": {
+        "name": "Protok dovodnog zraka"
+      },
+      "extract_flow": {
+        "name": "Protok odsisnog zraka"
+      },
+      "outdoor_flow": {
+        "name": "Protok vanjskog zraka"
+      },
+      "supply_flow_requested": {
+        "name": "Traženi protok dovodnog zraka"
+      },
+      "extract_flow_requested": {
+        "name": "Traženi protok odsisnog zraka"
+      },
+      "outdoor_flow_requested": {
+        "name": "Traženi protok vanjskog zraka"
+      },
+      "current_phase": {
+        "name": "Trenutna faza",
+        "state": {
+          "off": "Isključeno",
+          "automatic": "Automatski",
+          "ventilation": "Ventilacija",
+          "circulation_with_ventilation": "Cirkulacija s ventilacijom",
+          "circulation": "Cirkulacija",
+          "night_precooling": "Noćno prethlađivanje",
+          "unbalanced": "Neuravnotežena ventilacija",
+          "overpressure": "Pretlačna ventilacija"
+        }
+      },
+      "season": {
+        "name": "Trenutna sezona",
+        "state": {
+          "heating": "Sezona grijanja",
+          "non_heating": "Sezona bez grijanja"
+        }
+      },
+      "forced_state": {
+        "name": "Prisilno stanje",
+        "state": {
+          "none": "Nema",
+          "starting": "Pokretanje",
+          "stopping": "Zaustavljanje",
+          "input_d1": "Ulaz D1",
+          "input_d2": "Ulaz D2",
+          "input_d3": "Ulaz D3",
+          "input_d4": "Ulaz D4",
+          "input_in1": "Ulaz IN1",
+          "input_in2": "Ulaz IN2",
+          "input_k1_in1": "Ulaz INk1 modula 1",
+          "input_k1_in2": "Ulaz INk2 modula 1",
+          "input_k1_in3": "Ulaz INk3 modula 1",
+          "input_k1_in4": "Ulaz INk4 modula 1",
+          "input_k2_in1": "Ulaz INk1 modula 2",
+          "input_k2_in2": "Ulaz INk2 modula 2",
+          "input_k2_in3": "Ulaz INk3 modula 2",
+          "input_k2_in4": "Ulaz INk4 modula 2",
+          "input_k1_tr1": "Ulaz TRk1 modula 1",
+          "input_k1_tr2": "Ulaz TRk2 modula 1",
+          "input_k1_tr3": "Ulaz TRk3 modula 1",
+          "input_k1_tr4": "Ulaz TRk4 modula 1",
+          "input_k1_tr5": "Ulaz TRk5 modula 1",
+          "input_k2_tr1": "Ulaz TRk1 modula 2",
+          "input_k2_tr2": "Ulaz TRk2 modula 2",
+          "input_k2_tr3": "Ulaz TRk3 modula 2",
+          "input_k2_tr4": "Ulaz TRk4 modula 2",
+          "input_k2_tr5": "Ulaz TRk5 modula 2",
+          "heat_pump_defrosting": "Odmrzavanje dizalice topline",
+          "preheating": "Predgrijavanje",
+          "learning": "Učenje",
+          "heat_pump_defrosting_2": "Odmrzavanje dizalice topline",
+          "filter_test": "Test filtra",
+          "periodic_ventilation": "Periodična ventilacija"
+        }
+      },
+      "fan_m1_voltage": {
+        "name": "Upravljački napon ventilatora M1"
+      },
+      "fan_m2_voltage": {
+        "name": "Upravljački napon ventilatora M2"
+      },
+      "heat_pump_demand": {
+        "name": "Zahtjev prema dizalici topline"
+      },
+      "heat_storage_top": {
+        "name": "Temperatura u gornjem dijelu spremnika"
+      },
+      "heat_storage_middle": {
+        "name": "Temperatura u srednjem dijelu spremnika"
+      }
+    },
+    "binary_sensor": {
+      "fault": {
+        "name": "Kvar"
+      },
+      "filter_change_due": {
+        "name": "Zamjena filtra"
+      },
+      "filter_clogged": {
+        "name": "Začepljen filtar"
+      },
+      "recuperator_frozen": {
+        "name": "Smrznut izmjenjivač topline"
+      },
+      "recuperator_defrosting": {
+        "name": "Odmrzavanje izmjenjivača topline"
+      },
+      "heat_pump_heating": {
+        "name": "Dizalica topline grije"
+      },
+      "heat_pump_cooling": {
+        "name": "Dizalica topline hladi"
+      },
+      "heat_pump_defrosting": {
+        "name": "Odmrzavanje dizalice topline"
+      }
+    },
+    "switch": {
+      "weekly_program": {
+        "name": "Tjedni program"
+      },
+      "electric_heater_1": {
+        "name": "Električni grijač spremnika 1"
+      },
+      "electric_heater_2": {
+        "name": "Električni grijač spremnika 2"
+      }
+    },
+    "number": {
+      "heat_storage_target_top": {
+        "name": "Zadana temperatura u gornjem dijelu spremnika"
+      },
+      "heat_storage_target_middle": {
+        "name": "Zadana temperatura u srednjem dijelu spremnika"
+      },
+      "season_temperature": {
+        "name": "Temperatura promjene sezone"
+      },
+      "power": {
+        "name": "Snaga"
+      },
+      "power_step": {
+        "name": "Stupanj snage"
+      }
+    },
+    "button": {
+      "reset_filter_interval": {
+        "name": "Potvrdi zamjenu filtra"
+      },
+      "reset_alarms": {
+        "name": "Resetiranje alarma"
+      }
+    }
+  }
+}

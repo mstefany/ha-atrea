@@ -1,0 +1,303 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "description": "Activați mai întâi Modbus TCP pe unitate: parametrul de service 3.15.1.",
+        "data": {
+          "host": "Gazdă",
+          "port": "Port"
+        },
+        "data_description": {
+          "host": "Numele de gazdă sau adresa IP a unității.",
+          "port": "Portul Modbus TCP al unității."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "A eșuat conectarea: {error}",
+      "not_rd5": "Dispozitivul răspunde, dar nu ca o unitate Atrea cu sistem de control RD5."
+    },
+    "abort": {
+      "already_configured": "Dispozitivul a fost configurat deja"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "description": "Unitatea poate prelua temperatura din cameră și temperatura exterioară din Home Assistant. Pentru aceasta, pe unitate trebuie făcută setarea de service corespunzătoare (sursa de temperatură BMS).",
+        "data": {
+          "indoor_temperature_entity": "Senzor de temperatură ambiantă",
+          "outdoor_temperature_entity": "Senzor de temperatură exterioară",
+          "climate_sets_season": "Entitatea de climatizare poate schimba sezonul"
+        },
+        "data_description": {
+          "climate_sets_season": "Oprit: entitatea de climatizare doar pornește și oprește unitatea; schimbați sezonul din selecția „Sezon”. Pornit: Încălzire, Răcire și Încălzire / Răcire setează sezonul de încălzire, sezonul fără încălzire și T-ODA, inclusiv la cererea unui asistent vocal sau a unei automatizări."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "season_locked": {
+      "message": "Entitatea de climatizare nu schimbă sezonul. Folosiți selecția „Sezon” sau permiteți acest lucru în opțiunile integrării."
+    },
+    "write_failed": {
+      "message": "Unitatea nu a acceptat modificarea: {error}"
+    }
+  },
+  "entity": {
+    "climate": {
+      "unit": {
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "off": "Oprit",
+              "automatic": "Automat",
+              "ventilation": "Ventilație",
+              "circulation_with_ventilation": "Recirculare cu ventilație",
+              "circulation": "Recirculare",
+              "night_precooling": "Răcire pe timp de noapte",
+              "unbalanced": "Ventilație dezechilibrată",
+              "overpressure": "Ventilație cu suprapresiune"
+            }
+          },
+          "fan_mode": {
+            "state": {
+              "ventilation_min": "Ventilație Min",
+              "ventilation_norm": "Ventilație Norm",
+              "ventilation_max": "Ventilație Max",
+              "circulation_min": "Recirculare Min",
+              "circulation_norm": "Recirculare Norm",
+              "circulation_max": "Recirculare Max",
+              "min_min": "Recirculare Min / ventilație Min",
+              "min_norm": "Recirculare Min / ventilație Norm",
+              "min_max": "Recirculare Min / ventilație Max",
+              "norm_min": "Recirculare Norm / ventilație Min",
+              "norm_norm": "Recirculare Norm / ventilație Norm",
+              "norm_max": "Recirculare Norm / ventilație Max",
+              "max_min": "Recirculare Max / ventilație Min",
+              "max_norm": "Recirculare Max / ventilație Norm",
+              "max_max": "Recirculare Max / ventilație Max"
+            }
+          }
+        }
+      }
+    },
+    "select": {
+      "operating_mode": {
+        "name": "Mod de funcționare",
+        "state": {
+          "off": "Oprit",
+          "automatic": "Automat",
+          "ventilation": "Ventilație",
+          "circulation_with_ventilation": "Recirculare cu ventilație",
+          "circulation": "Recirculare",
+          "night_precooling": "Răcire pe timp de noapte",
+          "unbalanced": "Ventilație dezechilibrată",
+          "overpressure": "Ventilație cu suprapresiune"
+        }
+      },
+      "power_level": {
+        "name": "Putere",
+        "state": {
+          "ventilation_min": "Ventilație Min",
+          "ventilation_norm": "Ventilație Norm",
+          "ventilation_max": "Ventilație Max",
+          "circulation_min": "Recirculare Min",
+          "circulation_norm": "Recirculare Norm",
+          "circulation_max": "Recirculare Max",
+          "min_min": "Recirculare Min / ventilație Min",
+          "min_norm": "Recirculare Min / ventilație Norm",
+          "min_max": "Recirculare Min / ventilație Max",
+          "norm_min": "Recirculare Norm / ventilație Min",
+          "norm_norm": "Recirculare Norm / ventilație Norm",
+          "norm_max": "Recirculare Norm / ventilație Max",
+          "max_min": "Recirculare Max / ventilație Min",
+          "max_norm": "Recirculare Max / ventilație Norm",
+          "max_max": "Recirculare Max / ventilație Max"
+        }
+      },
+      "season_mode": {
+        "name": "Sezon",
+        "state": {
+          "heating": "Sezon de încălzire",
+          "non_heating": "Sezon fără încălzire",
+          "t_oda": "Automat în funcție de T-ODA",
+          "t_oda_plus": "Automat în funcție de T-ODA+"
+        }
+      }
+    },
+    "sensor": {
+      "outdoor_air": {
+        "name": "Temperatura aerului exterior"
+      },
+      "supply_air": {
+        "name": "Temperatura aerului introdus"
+      },
+      "extract_air": {
+        "name": "Temperatura aerului extras"
+      },
+      "exhaust_air": {
+        "name": "Temperatura aerului evacuat"
+      },
+      "indoor_air": {
+        "name": "Temperatura camerei"
+      },
+      "outdoor_air_average": {
+        "name": "Temperatura medie a aerului exterior"
+      },
+      "supply_flow": {
+        "name": "Debitul aerului introdus"
+      },
+      "extract_flow": {
+        "name": "Debitul aerului extras"
+      },
+      "outdoor_flow": {
+        "name": "Debitul aerului exterior"
+      },
+      "supply_flow_requested": {
+        "name": "Debitul solicitat al aerului introdus"
+      },
+      "extract_flow_requested": {
+        "name": "Debitul solicitat al aerului extras"
+      },
+      "outdoor_flow_requested": {
+        "name": "Debitul solicitat al aerului exterior"
+      },
+      "current_phase": {
+        "name": "Faza curentă",
+        "state": {
+          "off": "Oprit",
+          "automatic": "Automat",
+          "ventilation": "Ventilație",
+          "circulation_with_ventilation": "Recirculare cu ventilație",
+          "circulation": "Recirculare",
+          "night_precooling": "Răcire pe timp de noapte",
+          "unbalanced": "Ventilație dezechilibrată",
+          "overpressure": "Ventilație cu suprapresiune"
+        }
+      },
+      "season": {
+        "name": "Sezonul curent",
+        "state": {
+          "heating": "Sezon de încălzire",
+          "non_heating": "Sezon fără încălzire"
+        }
+      },
+      "forced_state": {
+        "name": "Stare forțată",
+        "state": {
+          "none": "Niciuna",
+          "starting": "Pornire",
+          "stopping": "Oprire treptată",
+          "input_d1": "Intrare D1",
+          "input_d2": "Intrare D2",
+          "input_d3": "Intrare D3",
+          "input_d4": "Intrare D4",
+          "input_in1": "Intrare IN1",
+          "input_in2": "Intrare IN2",
+          "input_k1_in1": "Intrare INk1 a modulului 1",
+          "input_k1_in2": "Intrare INk2 a modulului 1",
+          "input_k1_in3": "Intrare INk3 a modulului 1",
+          "input_k1_in4": "Intrare INk4 a modulului 1",
+          "input_k2_in1": "Intrare INk1 a modulului 2",
+          "input_k2_in2": "Intrare INk2 a modulului 2",
+          "input_k2_in3": "Intrare INk3 a modulului 2",
+          "input_k2_in4": "Intrare INk4 a modulului 2",
+          "input_k1_tr1": "Intrare TRk1 a modulului 1",
+          "input_k1_tr2": "Intrare TRk2 a modulului 1",
+          "input_k1_tr3": "Intrare TRk3 a modulului 1",
+          "input_k1_tr4": "Intrare TRk4 a modulului 1",
+          "input_k1_tr5": "Intrare TRk5 a modulului 1",
+          "input_k2_tr1": "Intrare TRk1 a modulului 2",
+          "input_k2_tr2": "Intrare TRk2 a modulului 2",
+          "input_k2_tr3": "Intrare TRk3 a modulului 2",
+          "input_k2_tr4": "Intrare TRk4 a modulului 2",
+          "input_k2_tr5": "Intrare TRk5 a modulului 2",
+          "heat_pump_defrosting": "Degivrare pompă de căldură",
+          "preheating": "Preîncălzire",
+          "learning": "Învățare",
+          "heat_pump_defrosting_2": "Degivrare pompă de căldură",
+          "filter_test": "Test filtru",
+          "periodic_ventilation": "Ventilație periodică"
+        }
+      },
+      "fan_m1_voltage": {
+        "name": "Tensiunea de comandă a ventilatorului M1"
+      },
+      "fan_m2_voltage": {
+        "name": "Tensiunea de comandă a ventilatorului M2"
+      },
+      "heat_pump_demand": {
+        "name": "Cerere către pompa de căldură"
+      },
+      "heat_storage_top": {
+        "name": "Temperatura în partea superioară a rezervorului"
+      },
+      "heat_storage_middle": {
+        "name": "Temperatura în partea de mijloc a rezervorului"
+      }
+    },
+    "binary_sensor": {
+      "fault": {
+        "name": "Defecțiune"
+      },
+      "filter_change_due": {
+        "name": "Schimbare filtru"
+      },
+      "filter_clogged": {
+        "name": "Filtru colmatat"
+      },
+      "recuperator_frozen": {
+        "name": "Schimbător de căldură înghețat"
+      },
+      "recuperator_defrosting": {
+        "name": "Degivrare schimbător de căldură"
+      },
+      "heat_pump_heating": {
+        "name": "Pompa de căldură încălzește"
+      },
+      "heat_pump_cooling": {
+        "name": "Pompa de căldură răcește"
+      },
+      "heat_pump_defrosting": {
+        "name": "Degivrare pompă de căldură"
+      }
+    },
+    "switch": {
+      "weekly_program": {
+        "name": "Program săptămânal"
+      },
+      "electric_heater_1": {
+        "name": "Rezistență electrică 1 a rezervorului"
+      },
+      "electric_heater_2": {
+        "name": "Rezistență electrică 2 a rezervorului"
+      }
+    },
+    "number": {
+      "heat_storage_target_top": {
+        "name": "Temperatura dorită în partea superioară a rezervorului"
+      },
+      "heat_storage_target_middle": {
+        "name": "Temperatura dorită în partea de mijloc a rezervorului"
+      },
+      "season_temperature": {
+        "name": "Temperatura de schimbare a sezonului"
+      },
+      "power": {
+        "name": "Putere"
+      },
+      "power_step": {
+        "name": "Treaptă de putere"
+      }
+    },
+    "button": {
+      "reset_filter_interval": {
+        "name": "Confirmă schimbarea filtrului"
+      },
+      "reset_alarms": {
+        "name": "Resetare alarme"
+      }
+    }
+  }
+}

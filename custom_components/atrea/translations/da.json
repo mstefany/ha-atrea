@@ -1,0 +1,303 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "description": "Aktivér først Modbus TCP på anlægget: serviceparameter 3.15.1.",
+        "data": {
+          "host": "Vært",
+          "port": "Port"
+        },
+        "data_description": {
+          "host": "Anlæggets værtsnavn eller IP-adresse.",
+          "port": "Anlæggets Modbus TCP-port."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Forbindelse mislykkedes: {error}",
+      "not_rd5": "Enheden svarer, men ikke som et Atrea-anlæg med RD5-styring."
+    },
+    "abort": {
+      "already_configured": "Enheden er allerede konfigureret"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "description": "Anlægget kan hente rum- og udendørstemperaturen fra Home Assistant. Det kræver den tilsvarende serviceindstilling på anlægget (temperaturkilde BMS).",
+        "data": {
+          "indoor_temperature_entity": "Rumtemperaturføler",
+          "outdoor_temperature_entity": "Udendørstemperaturføler",
+          "climate_sets_season": "Klimaentiteten kan skifte sæson"
+        },
+        "data_description": {
+          "climate_sets_season": "Fra: klimaentiteten tænder og slukker kun anlægget; skift sæson med entiteten »Sæson«. Til: »Opvarmning«, »Afkøling« og »Opvarm/køl« vælger fyringssæson, perioden uden for fyringssæson og T-ODA, også når en stemmeassistent eller en automatisering beder om det."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "season_locked": {
+      "message": "Klimaentiteten skifter ikke sæson. Brug entiteten »Sæson«, eller tillad det i integrationens indstillinger."
+    },
+    "write_failed": {
+      "message": "Anlægget accepterede ikke ændringen: {error}"
+    }
+  },
+  "entity": {
+    "climate": {
+      "unit": {
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "off": "Slukket",
+              "automatic": "Automatisk",
+              "ventilation": "Ventilation",
+              "circulation_with_ventilation": "Cirkulation med ventilation",
+              "circulation": "Cirkulation",
+              "night_precooling": "Natkøling",
+              "unbalanced": "Ubalanceret ventilation",
+              "overpressure": "Overtryksventilation"
+            }
+          },
+          "fan_mode": {
+            "state": {
+              "ventilation_min": "Ventilation Min",
+              "ventilation_norm": "Ventilation Norm",
+              "ventilation_max": "Ventilation Max",
+              "circulation_min": "Cirkulation Min",
+              "circulation_norm": "Cirkulation Norm",
+              "circulation_max": "Cirkulation Max",
+              "min_min": "Cirkulation Min / ventilation Min",
+              "min_norm": "Cirkulation Min / ventilation Norm",
+              "min_max": "Cirkulation Min / ventilation Max",
+              "norm_min": "Cirkulation Norm / ventilation Min",
+              "norm_norm": "Cirkulation Norm / ventilation Norm",
+              "norm_max": "Cirkulation Norm / ventilation Max",
+              "max_min": "Cirkulation Max / ventilation Min",
+              "max_norm": "Cirkulation Max / ventilation Norm",
+              "max_max": "Cirkulation Max / ventilation Max"
+            }
+          }
+        }
+      }
+    },
+    "select": {
+      "operating_mode": {
+        "name": "Driftstilstand",
+        "state": {
+          "off": "Slukket",
+          "automatic": "Automatisk",
+          "ventilation": "Ventilation",
+          "circulation_with_ventilation": "Cirkulation med ventilation",
+          "circulation": "Cirkulation",
+          "night_precooling": "Natkøling",
+          "unbalanced": "Ubalanceret ventilation",
+          "overpressure": "Overtryksventilation"
+        }
+      },
+      "power_level": {
+        "name": "Ydelse",
+        "state": {
+          "ventilation_min": "Ventilation Min",
+          "ventilation_norm": "Ventilation Norm",
+          "ventilation_max": "Ventilation Max",
+          "circulation_min": "Cirkulation Min",
+          "circulation_norm": "Cirkulation Norm",
+          "circulation_max": "Cirkulation Max",
+          "min_min": "Cirkulation Min / ventilation Min",
+          "min_norm": "Cirkulation Min / ventilation Norm",
+          "min_max": "Cirkulation Min / ventilation Max",
+          "norm_min": "Cirkulation Norm / ventilation Min",
+          "norm_norm": "Cirkulation Norm / ventilation Norm",
+          "norm_max": "Cirkulation Norm / ventilation Max",
+          "max_min": "Cirkulation Max / ventilation Min",
+          "max_norm": "Cirkulation Max / ventilation Norm",
+          "max_max": "Cirkulation Max / ventilation Max"
+        }
+      },
+      "season_mode": {
+        "name": "Sæson",
+        "state": {
+          "heating": "Fyringssæson",
+          "non_heating": "Uden for fyringssæson",
+          "t_oda": "Automatisk efter T-ODA",
+          "t_oda_plus": "Automatisk efter T-ODA+"
+        }
+      }
+    },
+    "sensor": {
+      "outdoor_air": {
+        "name": "Udelufttemperatur"
+      },
+      "supply_air": {
+        "name": "Indblæsningstemperatur"
+      },
+      "extract_air": {
+        "name": "Udsugningstemperatur"
+      },
+      "exhaust_air": {
+        "name": "Afkasttemperatur"
+      },
+      "indoor_air": {
+        "name": "Rumtemperatur"
+      },
+      "outdoor_air_average": {
+        "name": "Gennemsnitlig udelufttemperatur"
+      },
+      "supply_flow": {
+        "name": "Indblæsningsluftmængde"
+      },
+      "extract_flow": {
+        "name": "Udsugningsluftmængde"
+      },
+      "outdoor_flow": {
+        "name": "Udeluftmængde"
+      },
+      "supply_flow_requested": {
+        "name": "Ønsket indblæsningsluftmængde"
+      },
+      "extract_flow_requested": {
+        "name": "Ønsket udsugningsluftmængde"
+      },
+      "outdoor_flow_requested": {
+        "name": "Ønsket udeluftmængde"
+      },
+      "current_phase": {
+        "name": "Aktuel fase",
+        "state": {
+          "off": "Slukket",
+          "automatic": "Automatisk",
+          "ventilation": "Ventilation",
+          "circulation_with_ventilation": "Cirkulation med ventilation",
+          "circulation": "Cirkulation",
+          "night_precooling": "Natkøling",
+          "unbalanced": "Ubalanceret ventilation",
+          "overpressure": "Overtryksventilation"
+        }
+      },
+      "season": {
+        "name": "Aktuel sæson",
+        "state": {
+          "heating": "Fyringssæson",
+          "non_heating": "Uden for fyringssæson"
+        }
+      },
+      "forced_state": {
+        "name": "Tvangstilstand",
+        "state": {
+          "none": "Ingen",
+          "starting": "Opstart",
+          "stopping": "Efterløb",
+          "input_d1": "Indgang D1",
+          "input_d2": "Indgang D2",
+          "input_d3": "Indgang D3",
+          "input_d4": "Indgang D4",
+          "input_in1": "Indgang IN1",
+          "input_in2": "Indgang IN2",
+          "input_k1_in1": "Indgang INk1 på modul 1",
+          "input_k1_in2": "Indgang INk2 på modul 1",
+          "input_k1_in3": "Indgang INk3 på modul 1",
+          "input_k1_in4": "Indgang INk4 på modul 1",
+          "input_k2_in1": "Indgang INk1 på modul 2",
+          "input_k2_in2": "Indgang INk2 på modul 2",
+          "input_k2_in3": "Indgang INk3 på modul 2",
+          "input_k2_in4": "Indgang INk4 på modul 2",
+          "input_k1_tr1": "Indgang TRk1 på modul 1",
+          "input_k1_tr2": "Indgang TRk2 på modul 1",
+          "input_k1_tr3": "Indgang TRk3 på modul 1",
+          "input_k1_tr4": "Indgang TRk4 på modul 1",
+          "input_k1_tr5": "Indgang TRk5 på modul 1",
+          "input_k2_tr1": "Indgang TRk1 på modul 2",
+          "input_k2_tr2": "Indgang TRk2 på modul 2",
+          "input_k2_tr3": "Indgang TRk3 på modul 2",
+          "input_k2_tr4": "Indgang TRk4 på modul 2",
+          "input_k2_tr5": "Indgang TRk5 på modul 2",
+          "heat_pump_defrosting": "Afrimning af varmepumpe",
+          "preheating": "Forvarmning",
+          "learning": "Indlæring",
+          "heat_pump_defrosting_2": "Afrimning af varmepumpe",
+          "filter_test": "Filtertest",
+          "periodic_ventilation": "Periodisk ventilation"
+        }
+      },
+      "fan_m1_voltage": {
+        "name": "Styrespænding for ventilator M1"
+      },
+      "fan_m2_voltage": {
+        "name": "Styrespænding for ventilator M2"
+      },
+      "heat_pump_demand": {
+        "name": "Varmepumpebehov"
+      },
+      "heat_storage_top": {
+        "name": "Temperatur øverst i akkumuleringstanken"
+      },
+      "heat_storage_middle": {
+        "name": "Temperatur i midten af akkumuleringstanken"
+      }
+    },
+    "binary_sensor": {
+      "fault": {
+        "name": "Fejl"
+      },
+      "filter_change_due": {
+        "name": "Filterskift"
+      },
+      "filter_clogged": {
+        "name": "Filter tilstoppet"
+      },
+      "recuperator_frozen": {
+        "name": "Varmeveksler tilfrosset"
+      },
+      "recuperator_defrosting": {
+        "name": "Afrimning af varmeveksler"
+      },
+      "heat_pump_heating": {
+        "name": "Varmepumpe varmer"
+      },
+      "heat_pump_cooling": {
+        "name": "Varmepumpe køler"
+      },
+      "heat_pump_defrosting": {
+        "name": "Afrimning af varmepumpe"
+      }
+    },
+    "switch": {
+      "weekly_program": {
+        "name": "Ugeprogram"
+      },
+      "electric_heater_1": {
+        "name": "Elvarmelegeme 1 i akkumuleringstanken"
+      },
+      "electric_heater_2": {
+        "name": "Elvarmelegeme 2 i akkumuleringstanken"
+      }
+    },
+    "number": {
+      "heat_storage_target_top": {
+        "name": "Ønsket temperatur øverst i akkumuleringstanken"
+      },
+      "heat_storage_target_middle": {
+        "name": "Ønsket temperatur i midten af akkumuleringstanken"
+      },
+      "season_temperature": {
+        "name": "Temperatur for sæsonskift"
+      },
+      "power": {
+        "name": "Ydelse"
+      },
+      "power_step": {
+        "name": "Ydelsestrin"
+      }
+    },
+    "button": {
+      "reset_filter_interval": {
+        "name": "Bekræft filterskift"
+      },
+      "reset_alarms": {
+        "name": "Nulstil alarmer"
+      }
+    }
+  }
+}

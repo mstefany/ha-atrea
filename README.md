@@ -63,8 +63,16 @@ The unit can take the room temperature or the outdoor temperature from
 Home Assistant. This needs the matching service setting on the unit
 (temperature source "BMS"). Choose the sensors under **Configure** on the
 integration. The integration then sends their values with every poll, every
-30 seconds. If a sensor has no value, nothing is sent, and the unit raises its
-own sensor fault after 90 seconds.
+30 seconds. When a sensor gets a value again (for example after a restart of
+Home Assistant), the value goes out at once, without waiting for the poll.
+
+If a sensor has no value, nothing is sent. About 90 seconds after the last
+value, the unit raises its own sensor fault (room sensor fault and T-ETA/T-IDA
+sensor fault), and shows 127 °C as the room temperature. The fault clears by
+itself within seconds of the next value; no reset is needed. A restart of the
+test Home Assistant left a gap of about 40 seconds, well under the limit. A
+Home Assistant that needs more than 90 seconds to start makes the unit show
+the fault for that time.
 
 - The integration never changes the service setting itself. It reads the
   setting when it starts; after you change it on the unit, reload the
@@ -78,8 +86,19 @@ own sensor fault after 90 seconds.
 - Zones (zone 1, zone 2, both) are not in Home Assistant yet. The library can
   request a zone, but the test unit has one zone, so nobody could test it.
 - Not tried on a real unit: the weekly program switch, writing heat storage
-  targets and heater switches, the reset buttons, sending temperatures from
-  this integration, and units other than an R_5 with two-zone operation.
+  targets and heater switches, sending the outdoor temperature, and units
+  other than an R_5 with two-zone operation. Tried on the test unit: the
+  modes and power levels, the season, the target temperature, both reset
+  buttons, and sending the room temperature (30 minutes as the only sender).
+
+## Languages
+
+English, Czech, Slovak, and the other languages of the unit's own control
+panel: Bulgarian, Croatian, Danish, French, German, Hungarian, Italian,
+Latvian, Polish, Romanian, Russian and Spanish. The mode names follow the
+panel where its wording is correct. Native speakers have not reviewed the
+translations yet; corrections are welcome. Edit `script/i18n/<language>.json`
+and run `python script/gen_translations.py`.
 
 ## Develop
 
@@ -88,7 +107,7 @@ edit the copy. Change the library and run:
 
 ```bash
 python script/vendor.py            # copy ../atrea-modbus into the integration
-python script/gen_translations.py  # write translations/en.json and cs.json
+python script/gen_translations.py  # write translations/*.json from script/i18n
 ```
 
 A separate Home Assistant for development, which shares nothing with your real
