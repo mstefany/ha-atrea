@@ -73,6 +73,14 @@ own sensor fault after 90 seconds.
   them with the **Combine the state of several sensors** helper, and choose
   that sensor.
 
+## Known gaps
+
+- Zones (zone 1, zone 2, both) are not in Home Assistant yet. The library can
+  request a zone, but the test unit has one zone, so nobody could test it.
+- Not tried on a real unit: the weekly program switch, writing heat storage
+  targets and heater switches, the reset buttons, sending temperatures from
+  this integration, and units other than an R_5 with two-zone operation.
+
 ## Develop
 
 The device library is copied into `custom_components/atrea/vendor`. Do not
