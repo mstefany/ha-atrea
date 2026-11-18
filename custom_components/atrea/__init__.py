@@ -65,6 +65,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: AtreaConfigEntry) -> boo
         settings=settings,
         unique_id=entry.unique_id or entry.entry_id,
     )
+    readings.async_watch_sources()
+    entry.async_on_unload(readings.async_stop_watching)
     entry.async_on_unload(entry.add_update_listener(_async_options_updated))
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     return True
@@ -72,6 +74,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: AtreaConfigEntry) -> boo
 
 async def _async_options_updated(hass: HomeAssistant, entry: AtreaConfigEntry) -> None:
     """Send the newly chosen temperatures without waiting for the next poll."""
+    entry.runtime_data.readings.async_watch_sources()
     await entry.runtime_data.readings.async_request_refresh()
 
 

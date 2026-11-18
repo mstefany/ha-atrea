@@ -280,6 +280,30 @@ async def test_room_temperature_is_sent_to_the_unit(
     await entry.runtime_data.readings.async_refresh()
     assert writes == []
 
+    # When the sensor has a value again, it goes out without waiting for a poll.
+    hass.states.async_set(
+        "sensor.room", "22.0", {"unit_of_measurement": "°C", "device_class": "temperature"}
+    )
+    await hass.async_block_till_done()
+    assert writes == [("holding", 10214, [220])]
+
+    # Other changes wait for the poll.
+    writes.clear()
+    hass.states.async_set(
+        "sensor.room", "22.4", {"unit_of_measurement": "°C", "device_class": "temperature"}
+    )
+    await hass.async_block_till_done()
+    assert writes == []
+
+    # After unloading, the sensor is no longer followed.
+    assert await hass.config_entries.async_unload(entry.entry_id)
+    hass.states.async_set("sensor.room", "unavailable")
+    hass.states.async_set(
+        "sensor.room", "23.0", {"unit_of_measurement": "°C", "device_class": "temperature"}
+    )
+    await hass.async_block_till_done()
+    assert writes == []
+
 
 async def test_diagnostics_leave_the_production_number_out(
     hass: HomeAssistant, loaded: MockConfigEntry

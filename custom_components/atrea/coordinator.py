@@ -12,9 +12,16 @@ from modbus_connection.model import UpdateReport
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import STATE_UNAVAILABLE, STATE_UNKNOWN, UnitOfTemperature
-from homeassistant.core import HomeAssistant
+from homeassistant.core import (
+    CALLBACK_TYPE,
+    Event,
+    EventStateChangedData,
+    HomeAssistant,
+    callback,
+)
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers import device_registry as dr
+from homeassistant.helpers.event import async_track_state_change_event
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from homeassistant.util.unit_conversion import TemperatureConverter
 
@@ -27,6 +34,8 @@ from .const import (
 from .vendor.atrea_modbus.rd5 import READINGS, AtreaRD5, IndoorTemperatureSource
 
 _LOGGER = logging.getLogger(__name__)
+
+NO_VALUE = (STATE_UNAVAILABLE, STATE_UNKNOWN)
 
 
 class AtreaCoordinator(DataUpdateCoordinator[UpdateReport]):
@@ -81,6 +90,46 @@ class AtreaCoordinator(DataUpdateCoordinator[UpdateReport]):
 class AtreaReadingsCoordinator(AtreaCoordinator):
     """Poll the readings, and send the temperatures the unit takes from outside."""
 
+    _unwatch: CALLBACK_TYPE | None = None
+
+    @callback
+    def async_watch_sources(self) -> None:
+        """Send at once when a chosen sensor gets a value again.
+
+        The unit raises a sensor fault 90 seconds after the last value. After a
+        restart of Home Assistant, or after the sensor was unavailable, the
+        value goes out without waiting for the next poll. Other changes wait
+        for the poll, which keeps the Modbus traffic low.
+        """
+        self.async_stop_watching()
+        options = self.config_entry.options
+        entities = [
+            entity_id
+            for option in (
+                CONF_INDOOR_TEMPERATURE_ENTITY,
+                CONF_OUTDOOR_TEMPERATURE_ENTITY,
+            )
+            if (entity_id := options.get(option))
+        ]
+        if entities:
+            self._unwatch = async_track_state_change_event(
+                self.hass, entities, self._async_source_changed
+            )
+
+    @callback
+    def async_stop_watching(self) -> None:
+        """Stop following the chosen sensors."""
+        if self._unwatch is not None:
+            self._unwatch()
+            self._unwatch = None
+
+    async def _async_source_changed(self, event: Event[EventStateChangedData]) -> None:
+        old, new = event.data["old_state"], event.data["new_state"]
+        if new is None or new.state in NO_VALUE:
+            return
+        if old is None or old.state in NO_VALUE:
+            await self._async_send_temperatures()
+
     async def _async_update_data(self) -> UpdateReport:
         report = await super()._async_update_data()
         await self._async_send_temperatures()
@@ -91,7 +140,7 @@ class AtreaReadingsCoordinator(AtreaCoordinator):
         entity_id = self.config_entry.options.get(option)
         if not entity_id or (state := self.hass.states.get(entity_id)) is None:
             return None
-        if state.state in (STATE_UNAVAILABLE, STATE_UNKNOWN):
+        if state.state in NO_VALUE:
             return None
         unit = state.attributes.get("unit_of_measurement", UnitOfTemperature.CELSIUS)
         try:
